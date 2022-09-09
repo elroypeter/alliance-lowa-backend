@@ -9,13 +9,13 @@ const config = Yaml.load(
     }
 );
 
-// if (process.env.NODE_ENV === "production") {
-//     config.app_port = process.env.PORT;
-//     config["app_data_source"]["host"] = process.env.DBHOST;
-//     config["app_data_source"]["port"] = process.env.DBPORT;
-//     config["app_data_source"]["username"] = process.env.DBUSER;
-//     config["app_data_source"]["password"] = process.env.DBPASSWORD;
-//     config["app_data_source"]["database"] = process.env.DBDATABASE;
-// }
+if (process.env.NODE_ENV === "production") {
+    config.app_port = process.env.PORT;
+    config["app_data_source"]["host"] = process.env.DBHOST;
+    config["app_data_source"]["port"] = process.env.DBPORT;
+    config["app_data_source"]["username"] = process.env.DBUSER;
+    config["app_data_source"]["password"] = process.env.DBPASSWORD;
+    config["app_data_source"]["database"] = process.env.DBDATABASE;
+}
 
 export { config };

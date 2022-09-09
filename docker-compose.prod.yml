@@ -32,5 +32,5 @@ services:
 
       environment:
       # env default port
-      - PORT=${PORT}
+      - PORT=4435
     command: pnpm serve:prod

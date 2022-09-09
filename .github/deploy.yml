@@ -13,7 +13,7 @@ jobs:
               with:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
-                  key: ${{ secrets.DEPLOY_UI_SECRET }}
+                  key: ${{ secrets.DEPLOY_SECRET }}
                   rm: true
                   source: "/"
                   target: "${{ secrets.REMOTE_DIR }}"
@@ -21,9 +21,15 @@ jobs:
             # Start backend container
             - name: Copying files to server
               uses: appleboy/ssh-action@master
+              env:
+                  DBHOST: ${{ secrets.DBHOST }}
+                  DBPORT: ${{ secrets.DBPORT }}
+                  DBUSER: ${{ secrets.DBUSER }}
+                  DBPASSWORD: ${{ secrets.DBPASSWORD }}
+                  DBDATABASE: ${{ secrets.DBDATABASE }}
               with:
-                  host: ${{ secrets.HOST }}
-                  username: ${{ secrets.USERNAME }}
-                  key: ${{ secrets.DEPLOY_UI_SECRET }}
+                  host: ${{ secrets.REMOTE_HOST }}
+                  username: ${{ secrets.REMOTE_USER }}
+                  key: ${{ secrets.DEPLOY_SECRET }}
                   port: ${{ secrets.PORT }}
-                  script: ./start_script.sh
+                  script: sudo chmod u+x ./start_script.sh && ./start_script.sh
