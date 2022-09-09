@@ -1,0 +1,29 @@
+name: Deploy Alliance Lowa Backend
+on:
+    pull_request:
+        branches: [production]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            # Copying files and artifacts via SSH
+            - name: Copying files to server
+              uses: appleboy/scp-action@master
+              with:
+                  host: ${{ secrets.REMOTE_HOST }}
+                  username: ${{ secrets.REMOTE_USER }}
+                  key: ${{ secrets.DEPLOY_UI_SECRET }}
+                  rm: true
+                  source: "/"
+                  target: "${{ secrets.REMOTE_DIR }}"
+
+            # Start backend container
+            - name: Copying files to server
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.DEPLOY_UI_SECRET }}
+                  port: ${{ secrets.PORT }}
+                  script: ./start_script.sh
