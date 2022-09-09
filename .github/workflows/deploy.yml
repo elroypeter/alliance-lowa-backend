@@ -7,15 +7,19 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
+            # Checkout from production branch
+            - name: Checkout
+              uses: actions/checkout@v2
+
             # Copying files and artifacts via SSH
             - name: scp pipeline
-              uses: cross-the-world/scp-pipeline@master
-              with:
-                  host: ${{ secrets.REMOTE_HOST }}
-                  user: ${{ secrets.REMOTE_USER }}
-                  key: ${{ secrets.DEPLOY_SECRET }}
-                  local: "./**"
-                  remote: "${{ secrets.REMOTE_DIR }}"
+              uses: easingthemes/ssh-deploy@main
+              env:
+                  SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SECRET }}
+                  SOURCE: "/"
+                  REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+                  REMOTE_USER: ${{ secrets.REMOTE_USER }}
+                  TARGET: ${{ secrets.REMOTE_DIR }}
 
             # # Start backend container
             # - name: Run Backend contianer
