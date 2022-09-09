@@ -15,7 +15,7 @@ jobs:
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.DEPLOY_SECRET }}
                   rm: true
-                  source: "/"
+                  source: "./"
                   target: "${{ secrets.REMOTE_DIR }}"
 
             # Start backend container
