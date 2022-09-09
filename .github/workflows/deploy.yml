@@ -25,19 +25,13 @@ jobs:
             # Start backend container
             - name: docker run pipeline
               uses: appleboy/ssh-action@master
-              env:
-                  DBHOST: ${{ secrets.DBHOST }}
-                  DBPORT: ${{ secrets.DBPORT }}
-                  DBUSER: ${{ secrets.DBUSER }}
-                  DBPASSWORD: ${{ secrets.DBPASSWORD }}
-                  DBDATABASE: ${{ secrets.DBDATABASE }}
               with:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.DEPLOY_SECRET }}
-                  envs: $DBHOST,$DBPORT,$DBUSER,$DBPASSWORD,$DBDATABASE
                   script: |
-                      echo $DBHOST 
+                      export DBHOST=${{ secrets.DBHOST }} DBPORT=${{ secrets.DBPORT }} DBUSER=${{ secrets.DBUSER }} DBPASSWORD=${{ secrets.DBPASSWORD }} DBDATABASE=${{ secrets.DBDATABASE }}
+                      echo $DBHOST
                       cd ~/backend 
                       sudo chmod u+x start_script.sh 
                       ./start_script.sh
