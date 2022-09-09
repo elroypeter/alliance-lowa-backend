@@ -15,7 +15,8 @@ jobs:
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.DEPLOY_SECRET }}
                   rm: true
-                  source: "/"
+                  debug: true
+                  source: "./"
                   target: "${{ secrets.REMOTE_DIR }}"
 
             # Start backend container
@@ -31,5 +32,5 @@ jobs:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.DEPLOY_SECRET }}
-                  port: ${{ secrets.PORT }}
+                  debug: true
                   script: sudo chmod u+x ./start_script.sh && ./start_script.sh
