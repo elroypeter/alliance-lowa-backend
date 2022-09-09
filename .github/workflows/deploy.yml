@@ -36,4 +36,4 @@ jobs:
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.DEPLOY_SECRET }}
                   envs: DBHOST,DBPORT,DBUSER,DBPASSWORD,DBDATABASE
-                  script: sudo chmod u+x ./start_script.sh && ./start_script.sh
+                  script: sudo chmod u+x start_script.sh && ./start_script.sh
