@@ -7,7 +7,7 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            Checkout from production branch
+            #Checkout from production branch
             - name: Checkout to production
               uses: actions/checkout@v2
 
