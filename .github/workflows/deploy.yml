@@ -35,5 +35,9 @@ jobs:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.DEPLOY_SECRET }}
-                  envs: DBHOST,DBPORT,DBUSER,DBPASSWORD,DBDATABASE
-                  script: echo $DBHOST && cd ~/backend && sudo chmod u+x start_script.sh && ./start_script.sh
+                  envs: $DBHOST,$DBPORT,$DBUSER,$DBPASSWORD,$DBDATABASE
+                  script: |
+                      echo $DBHOST 
+                      cd ~/backend 
+                      sudo chmod u+x start_script.sh 
+                      ./start_script.sh
