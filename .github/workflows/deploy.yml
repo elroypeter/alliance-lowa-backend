@@ -16,10 +16,11 @@ jobs:
               uses: easingthemes/ssh-deploy@main
               env:
                   SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SECRET }}
-                  SOURCE: "/"
+                  SOURCE: ""
                   REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
                   REMOTE_USER: ${{ secrets.REMOTE_USER }}
                   TARGET: ${{ secrets.REMOTE_DIR }}
+                  EXCLUDE: "/.git"
 
             # # Start backend container
             # - name: Run Backend contianer
