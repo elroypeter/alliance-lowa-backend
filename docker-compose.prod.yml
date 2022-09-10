@@ -30,9 +30,9 @@ services:
       # env default port
       - PORT=4435
       - NODE_ENV=production
-      - DBPORT=${DBPORT }
-      - DBHOST=${DBHOST }
-      - DBUSER=${DBUSER }
+      - DBPORT=${DBPORT}
+      - DBHOST=${DBHOST}
+      - DBUSER=${DBUSER}
       - DBDATABASE=${DBDATABASE}
       - DBPASSWORD=${DBPASSWORD}
     command: pnpm serve:prod
