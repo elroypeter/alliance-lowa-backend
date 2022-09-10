@@ -13,5 +13,11 @@ RUN if [ "$NODE_ENV" = "development" ]; \
     fi
 
 COPY . .
+
+# precompile ts files
+RUN if [ "$NODE_ENV" = "production" ]; \
+    then pnpm preserve:prod; \
+    fi
+
 EXPOSE ${PORT}
 CMD ["pnpm", "serve:prod"]
