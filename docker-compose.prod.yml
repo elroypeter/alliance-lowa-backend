@@ -15,7 +15,7 @@ services:
       - MYSQL_PASSWORD=${DBPASSWORD}
     volumes:
       # volume attaches to local file system
-      - ${DBVOLUME}:/var/lib/mysql
+      - ~/db:/var/lib/mysql
       # named volume eg
       # mysql-db:/var/lib/mysql where mysql-db is name of volume
 
