@@ -2,6 +2,7 @@ import * as Yaml from "js-yaml";
 import * as Path from "path";
 import * as fs from "fs";
 
+// read env file
 const config = Yaml.load(
     fs.readFileSync(
         Path.join(
@@ -17,6 +18,7 @@ const config = Yaml.load(
     }
 );
 
+// update prod envs
 if (process.env.NODE_ENV === "production") {
     config.app_port = process.env.PORT;
     config["app_data_source"]["host"] = process.env.DBHOST;
