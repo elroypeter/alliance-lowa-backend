@@ -26,7 +26,7 @@ jobs:
             - name: docker run pipeline
               uses: appleboy/ssh-action@master
               env:
-                  FOO: "TEST"
+                  FOO: "${{ secrets.DBHOST }}"
               with:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
