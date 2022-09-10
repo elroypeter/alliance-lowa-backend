@@ -30,8 +30,12 @@ jobs:
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.DEPLOY_SECRET }}
                   script: |
-                      cd ~/
-                      echo "export PORT=${{ secrets.PORT }}" >> .profile
-                  #   cd ~/backend
-                  #   sudo chmod u+x start_script.sh
-                  #   ./start_script.sh
+                      export PORT=${{ secrets.PORT }}
+                      export DBPORT=${{ secrets.DBPORT }}
+                      export DBHOST=${{ secrets.DBHOST }}
+                      export DBUSER=${{ secrets.DBUSER }}
+                      export DBDATABASE=${{ secrets.DBDATABASE }}
+                      export DBPASSWORD=${{ secrets.DBPASSWORD }}
+                      cd ~/backend
+                      sudo chmod u+x start_script.sh
+                      ./start_script.sh
