@@ -11,8 +11,8 @@ jobs:
             - name: Checkout to production
               uses: actions/checkout@v2
 
-            # Copying files and artifacts via SSH
-            - name: scp pipeline
+            # Build and Copying files and artifacts via SSH
+            - name: build and scp pipeline
               uses: easingthemes/ssh-deploy@main
               env:
                   SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SECRET }}

@@ -7,10 +7,11 @@ WORKDIR /app
 COPY package.json .
 
 ARG NODE_ENV
-
-RUN pnpm install
+RUN if [ "$NODE_ENV" = "development" ]; \
+    then pnpm install; \
+    else pnpm install; \
+    fi
 
 COPY . .
-
 EXPOSE ${PORT}
 CMD ["pnpm", "serve:prod"]
