@@ -1,4 +1,5 @@
 version: '3'
+
 services:
   # mysql development container
   mysqldb: 
@@ -25,12 +26,13 @@ services:
       context: .
       args:
         - NODE_ENV=production
-
-      ports:
-      # node port mapping
-      - "${PORT}:4435"
-
-      environment:
-      # env default port
-      - PORT=4435
+    ports:
+    # node port mapping
+    - "${PORT}:4435"
+    environment:
+    # env default port
+    - PORT=4435
+    volumes:
+    # anonymous volume
+    - /app/node_modules
     command: pnpm serve:prod

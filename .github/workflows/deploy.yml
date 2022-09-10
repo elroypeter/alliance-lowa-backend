@@ -8,31 +8,35 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             # Checkout from production branch
-            - name: Checkout
+            - name: Checkout to production
               uses: actions/checkout@v2
 
-            # Copying files and artifacts via SSH
-            - name: Copying files to server
-              uses: appleboy/scp-action@master
-              with:
-                  host: ${{ secrets.REMOTE_HOST }}
-                  username: ${{ secrets.REMOTE_USER }}
-                  key: ${{ secrets.DEPLOY_SECRET }}
-                  rm: true
-                  source: "./"
-                  target: "${{ secrets.REMOTE_DIR }}"
+            # Build and Copying files and artifacts via SSH
+            - name: build and scp pipeline
+              uses: easingthemes/ssh-deploy@main
+              env:
+                  SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SECRET }}
+                  SOURCE: ""
+                  REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+                  REMOTE_USER: ${{ secrets.REMOTE_USER }}
+                  TARGET: ${{ secrets.REMOTE_DIR }}
+                  EXCLUDE: "/.git"
 
             # Start backend container
-            - name: Run Backend contianer
+            - name: docker run pipeline
               uses: appleboy/ssh-action@master
-              env:
-                  DBHOST: ${{ secrets.DBHOST }}
-                  DBPORT: ${{ secrets.DBPORT }}
-                  DBUSER: ${{ secrets.DBUSER }}
-                  DBPASSWORD: ${{ secrets.DBPASSWORD }}
-                  DBDATABASE: ${{ secrets.DBDATABASE }}
               with:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.DEPLOY_SECRET }}
-                  script: sudo chmod u+x ./start_script.sh && ./start_script.sh
+                  script: |
+                      export PORT=${{ secrets.PORT }}
+                      export DBPORT=${{ secrets.DBPORT }}
+                      export DBHOST=${{ secrets.DBHOST }}
+                      export DBUSER=${{ secrets.DBUSER }}
+                      export DBDATABASE=${{ secrets.DBDATABASE }}
+                      export DBPASSWORD=${{ secrets.DBPASSWORD }}
+                      export DBVOLUME=${{ secrets.DBVOLUME }}
+                      cd ~/backend
+                      sudo chmod u+x start_script.sh
+                      ./start_script.sh
