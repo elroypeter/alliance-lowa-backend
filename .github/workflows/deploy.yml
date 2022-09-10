@@ -36,7 +36,7 @@ jobs:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.DEPLOY_SECRET }}
-                  envs: PORT, DBPORT, DBHOST, DBUSER, DBDATABASE, DBPASSWORD
+                  envs: PORT,DBPORT,DBHOST,DBUSER,DBDATABASE,DBPASSWORD
                   script: cd ~
                   #   && echo "export PORT=$PORT" >> .profile
                   #   cd ~/backend
