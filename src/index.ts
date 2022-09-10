@@ -5,6 +5,7 @@ import * as Koa from "koa";
 import * as Logger from "koa-logger";
 import * as Router from "@koa/router";
 import * as KoaBody from "koa-body";
+import * as KoaCors from "@koa/cors";
 import * as KoaCompress from "koa-compress";
 import * as KoaRateLimit from "koa-better-ratelimit";
 
@@ -21,6 +22,7 @@ AppDataSource.initialize()
         // bind middleware to Koa instance
         app.use(Logger());
         app.use(KoaBody());
+        app.use(KoaCors());
 
         // compress traffic
         const compressOpts = {
