@@ -6,7 +6,7 @@
     "scripts": {
         "serve:dev": "nodemon --watch",
         "preserve:prod": "tsc",
-        "serve": "node dist/",
+        "serve": "NODE_ENV=production node dist/",
         "serve:prod": "npm-run-all preserve:prod serve",
         "lint": "eslint src/**/*.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
