@@ -36,7 +36,8 @@ jobs:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.DEPLOY_SECRET }}
-                  script: cd ~
+                  script: |
+                      cd ~/
                   #   && echo "export PORT=$PORT" >> .profile
                   #   cd ~/backend
                   #   sudo chmod u+x start_script.sh
