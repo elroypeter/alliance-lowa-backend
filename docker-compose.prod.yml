@@ -22,14 +22,17 @@ services:
 
   # node app container prod config
   alliance-lowa-app:
-    build: 
-      context: .
-      args:
-        - NODE_ENV=production
+    build: . 
     ports:
-    # node port mapping
-    - "${PORT}:4435"
+      # node port mapping
+      - "${PORT}:4435"
     environment:
-    # env default port
-    - PORT=4435
+      # env default port
+      - PORT=4435
+      - NODE_ENV=production
+      - DBPORT=${DBPORT }
+      - DBHOST=${DBHOST }
+      - DBUSER=${DBUSER }
+      - DBDATABASE=${DBDATABASE}
+      - DBPASSWORD=${DBPASSWORD}
     command: pnpm serve:prod
