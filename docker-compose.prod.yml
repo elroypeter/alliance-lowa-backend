@@ -33,6 +33,8 @@ services:
     # env default port
     - PORT=4435
     volumes:
+    # bind volume
+    - ./:/app:ro
     # anonymous volume
     - /app/node_modules
     command: pnpm serve:prod
