@@ -3,7 +3,15 @@ import * as Path from "path";
 import * as fs from "fs";
 
 const config = Yaml.load(
-    fs.readFileSync(Path.join(__dirname, "../env.yml"), "utf-8"),
+    fs.readFileSync(
+        Path.join(
+            __dirname,
+            process.env.NODE_ENV === "production"
+                ? "../env.prod.yml"
+                : "../env.yml"
+        ),
+        "utf-8"
+    ),
     {
         json: true,
     }
