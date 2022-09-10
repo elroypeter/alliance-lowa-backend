@@ -36,6 +36,7 @@ jobs:
                       export DBUSER=${{ secrets.DBUSER }}
                       export DBDATABASE=${{ secrets.DBDATABASE }}
                       export DBPASSWORD=${{ secrets.DBPASSWORD }}
+                      export DBVOLUME=${{ secrets.DBVOLUME }}
                       cd ~/backend
                       sudo chmod u+x start_script.sh
                       ./start_script.sh
