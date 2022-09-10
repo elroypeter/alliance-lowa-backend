@@ -25,13 +25,6 @@ jobs:
             # Start backend container
             - name: docker run pipeline
               uses: appleboy/ssh-action@master
-              env:
-                  PORT: "${{ secrets.PORT }}"
-                  DBPORT: "${{ secrets.DBPORT }}"
-                  DBHOST: "${{ secrets.DBHOST }}"
-                  DBUSER: "${{ secrets.DBUSER }}"
-                  DBDATABASE: "${{ secrets.DBDATABASE }}"
-                  DBPASSWORD: "${{ secrets.DBPASSWORD }}"
               with:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
