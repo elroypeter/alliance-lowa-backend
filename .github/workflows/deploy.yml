@@ -38,7 +38,7 @@ jobs:
                   key: ${{ secrets.DEPLOY_SECRET }}
                   envs: PORT, DBPORT, DBHOST, DBUSER, DBDATABASE, DBPASSWORD
                   script: |
-                      echo $PORT
-                      cd ~/backend 
-                      sudo chmod u+x start_script.sh 
-                      ./start_script.sh
+                      echo "export PORT=$PORT" | cat >> .profile
+                  #   cd ~/backend
+                  #   sudo chmod u+x start_script.sh
+                  #   ./start_script.sh
