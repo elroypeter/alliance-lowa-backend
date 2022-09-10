@@ -31,7 +31,7 @@ jobs:
                   key: ${{ secrets.DEPLOY_SECRET }}
                   script: |
                       cd ~/
-                  #   && echo "export PORT=$PORT" >> .profile
+                      echo "export PORT=${{ secrets.PORT }}" >> .profile
                   #   cd ~/backend
                   #   sudo chmod u+x start_script.sh
                   #   ./start_script.sh
