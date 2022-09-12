@@ -7,7 +7,7 @@ export const verifyToken = (ctx: Context, next: Next) => {
     if (!token) {
         ctx.status = 403;
         ctx.message = "missing token";
-        ctx.body = { message: "session token is required for authentication" };
+        ctx.body = { message: "token is required for authentication" };
     } else {
         try {
             const decoded: string | JwtPayload = verify(
