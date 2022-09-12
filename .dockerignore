@@ -5,3 +5,4 @@ Dockerfile
 .gitignore
 pnpm-lock.yaml
 docker-compose*
+db
