@@ -13,7 +13,8 @@ class AuthController {
 
             if (!(email && password)) {
                 ctx.status = 400;
-                ctx.message = "all input is required";
+                ctx.body = { message: "all input is required" };
+                return;
             }
 
             const user: User = await User.findOneBy({ email });
@@ -36,9 +37,12 @@ class AuthController {
                     id: user.id,
                     name: user.name,
                 };
+                return;
             }
+
             ctx.status = 400;
             ctx.message = "Invalid Credentails";
+            return;
         } catch (error) {
             ctx.status = 400;
             ctx.message = "failed to process request";
