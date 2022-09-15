@@ -13,15 +13,14 @@ export const verifyToken = (ctx: Context, next: Next) => {
         try {
             const decoded: string | JwtPayload = verify(
                 String(token),
-                config.jwt_secret
+                config.jwt_secret,
+                { clockTimestamp: new Date().getTime() }
             );
 
             // check if token has expired
             const dateNow = new Date();
-            const dateDif = dateNow.getTime() - parseInt(decoded["date"]);
-            console.log(decoded["date"], dateDif, decoded["exp"]);
 
-            if (dateDif >= decoded["exp"]) {
+            if (decoded["exp"] * 1000 > dateNow.getTime()) {
                 ctx.status = 400;
                 ctx.message = "token has expired";
                 ctx.body = { message: "expired" };
