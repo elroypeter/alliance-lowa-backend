@@ -45,7 +45,7 @@ class AuthController {
             return;
         } catch (error) {
             ctx.status = 400;
-            ctx.message = "failed to process request";
+            ctx.message = error;
         }
     }
 
