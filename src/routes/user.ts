@@ -1,5 +1,5 @@
 import { UserControllerObj as UserController } from "../controller/User.controller";
-import { verifyToken } from "../middleware/auth.middleware";
+import { authGuard } from "../middleware/auth.middleware";
 
 /**
  * routes format
@@ -17,7 +17,7 @@ export const user = [
         "@path": "/user",
         "@httpMethod": "get",
         "@action": UserController.getUsers,
-        "@guards": [verifyToken],
+        "@guards": [authGuard],
     },
     {
         "@name": "saveUser",
@@ -31,6 +31,6 @@ export const user = [
         "@path": "/user/:id",
         "@httpMethod": "delete",
         "@action": UserController.deleteUser,
-        "@guards": [],
+        "@guards": [authGuard],
     },
 ];

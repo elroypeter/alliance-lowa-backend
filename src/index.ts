@@ -34,7 +34,7 @@ AppDataSource.initialize()
 
         // rate limiting
         app.use(
-            KoaRateLimit({ duration: 1000 * 60 * 3, max: 10, blacklist: [] })
+            KoaRateLimit({ duration: 1000 * 60 * 3, max: 20, blacklist: [] })
         );
 
         // configure routes
