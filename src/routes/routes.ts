@@ -3,8 +3,9 @@ import * as compose from "koa-compose";
 import { subscriber } from "./subscriber";
 import { auth } from "./auth";
 import { user } from "./user";
+import { imageSlider } from "./imageSlider";
 
-const routes = [...subscriber, ...auth, ...user];
+const routes = [...subscriber, ...auth, ...user, ...imageSlider];
 
 export const Routes = (router) => {
     const config = (route) => {
