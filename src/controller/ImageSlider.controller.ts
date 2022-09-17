@@ -19,7 +19,7 @@ class ImageSliderController {
         imageSlider.description = description;
 
         await imageSlider.save();
-        ctx.body = { subscriber: "saved successfully" };
+        ctx.body = { message: "saved successfully" };
         ctx.status = 200;
     }
 
@@ -35,7 +35,7 @@ class ImageSliderController {
         imageSlider.description = description;
 
         await imageSlider.save();
-        ctx.body = { imageSlider: "updated successfully" };
+        ctx.body = { message: "updated successfully" };
         ctx.status = 200;
     }
 
@@ -46,7 +46,7 @@ class ImageSliderController {
 
         imageSlider.isPublished = ctx.request.body.status;
         await imageSlider.save();
-        ctx.body = { imageSlider: "updated successfully" };
+        ctx.body = { message: "updated successfully" };
         ctx.status = 200;
     }
 
@@ -55,7 +55,7 @@ class ImageSliderController {
             id: ctx.params.id,
         });
         await imageSlider.remove();
-        ctx.body = { imageSlider: "removed successfully" };
+        ctx.body = { message: "removed successfully" };
         ctx.status = 200;
     }
 }
