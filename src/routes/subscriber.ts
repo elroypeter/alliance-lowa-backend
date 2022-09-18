@@ -1,4 +1,5 @@
 import { SubscriberControllerObj as SubscriberController } from "../controller/Subscriber.controller";
+import { authGuard } from "../middleware/auth.middleware";
 
 /**
  * routes format
@@ -16,7 +17,7 @@ export const subscriber = [
         "@path": "/subscriber",
         "@httpMethod": "get",
         "@action": SubscriberController.getSubscribers,
-        "@guards": [],
+        "@guards": [authGuard],
     },
     {
         "@name": "saveSubscriber",
@@ -30,6 +31,6 @@ export const subscriber = [
         "@path": "/subscriber/:id",
         "@httpMethod": "delete",
         "@action": SubscriberController.deleteSubscriber,
-        "@guards": [],
+        "@guards": [authGuard],
     },
 ];
