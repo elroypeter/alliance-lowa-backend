@@ -43,6 +43,7 @@
         "koa-logger": "^3.2.1",
         "mysql": "^2.18.1",
         "reflect-metadata": "^0.1.13",
+        "slugify": "^1.6.5",
         "typeorm": "^0.3.7"
     },
     "engines": {

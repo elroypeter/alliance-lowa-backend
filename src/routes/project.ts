@@ -20,6 +20,13 @@ export const project = [
         "@guards": [authGuard],
     },
     {
+        "@name": "getProject",
+        "@path": "/project/:id",
+        "@httpMethod": "get",
+        "@action": ProjectController.getProjectDetails,
+        "@guards": [authGuard],
+    },
+    {
         "@name": "saveProject",
         "@path": "/project",
         "@httpMethod": "post",

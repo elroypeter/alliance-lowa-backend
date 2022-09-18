@@ -13,6 +13,9 @@ export class Project extends BaseEntity {
     id: number;
 
     @Column({ length: 255 })
+    slug: string;
+
+    @Column({ length: 255 })
     title: string;
 
     @Column({ type: "boolean", default: false })
