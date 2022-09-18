@@ -1,4 +1,5 @@
 import { Context, Next } from "koa";
+import slugfiy from "slugify";
 import { Project } from "../entity/Project";
 import { ProjectImage } from "../entity/ProjectImage";
 
@@ -11,11 +12,21 @@ class ProjectController {
         ctx.body = project;
     }
 
+    async getProjectDetails(ctx: Context, next: Next) {
+        const projects: Project[] = await Project.find({
+            where: { id: ctx.params.id },
+            relations: ["images"],
+        });
+        ctx.status = 200;
+        ctx.body = projects[0];
+    }
+
     async saveProject(ctx: Context, next: Next) {
         const project: Project = new Project();
         const { title, description } = ctx.request.body;
 
         project.title = title;
+        project.slug = slugfiy(title, { lower: true });
         project.description = description;
 
         await project.save();
@@ -24,16 +35,18 @@ class ProjectController {
     }
 
     async addImage(ctx: Context, next: Next) {
-        const project: Project = await Project.findOneBy({
-            id: ctx.params.id,
+        const projects: Project[] = await Project.find({
+            where: { id: ctx.params.id },
+            relations: ["images"],
         });
 
         const { image } = ctx.request.body;
         const projectImage: ProjectImage = new ProjectImage();
         projectImage.imageData = image;
+        await projectImage.save();
 
-        project.images.push(projectImage);
-        await project.save();
+        projects[0].images.push(projectImage);
+        await projects[0].save();
         ctx.body = { message: "saved successfully" };
         ctx.status = 200;
     }
@@ -55,6 +68,7 @@ class ProjectController {
         const { title, description } = ctx.request.body;
 
         project.title = title;
+        project.slug = slugfiy(title, { lower: true });
         project.description = description;
 
         await project.save();
