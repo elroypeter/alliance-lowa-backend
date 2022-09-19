@@ -35,8 +35,8 @@ class UserController {
         user.password = await Bcrypt.hash(password, 10);
 
         await user.save();
-        ctx.body = { message: "saved successfully" };
         ctx.status = 200;
+        ctx.body = { message: "saved successfully" };
     }
 
     async deleteUser(ctx: Context, next: Next) {}
