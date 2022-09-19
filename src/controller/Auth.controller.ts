@@ -17,6 +17,8 @@ class AuthController {
                 return;
             }
 
+            console.log(email, password);
+
             const user: User = await User.findOneBy({ email });
             const isMatch = Bcrypt.compareSync(password, user.password);
 
@@ -31,6 +33,9 @@ class AuthController {
                     config.jwt_secret,
                     { expiresIn: config.token_ttl }
                 );
+
+                console.log(user, isMatch);
+                console.log(token);
 
                 ctx.state = 200;
                 ctx.body = {
