@@ -47,4 +47,11 @@ export const imageSlider = [
         "@action": ImageSliderController.deleteImageSlider,
         "@guards": [authGuard],
     },
+    {
+        "@name": "getWebImageSlider",
+        "@path": "/website/image-slider",
+        "@httpMethod": "get",
+        "@action": ImageSliderController.getImageSlider,
+        "@guards": [],
+    },
 ];
