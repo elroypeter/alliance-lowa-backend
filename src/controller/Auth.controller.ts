@@ -18,8 +18,9 @@ class AuthController {
             }
 
             const user: User = await User.findOneBy({ email });
+            const isMatch = Bcrypt.compareSync(password, user.password);
 
-            if (user && (await Bcrypt.compare(password, user.password))) {
+            if (user && isMatch) {
                 // create token
                 const token = sign(
                     {
@@ -30,6 +31,7 @@ class AuthController {
                     config.jwt_secret,
                     { expiresIn: config.token_ttl }
                 );
+
                 ctx.state = 200;
                 ctx.body = {
                     token,
@@ -46,6 +48,7 @@ class AuthController {
         } catch (error) {
             ctx.status = 400;
             ctx.message = error;
+            return;
         }
     }
 
