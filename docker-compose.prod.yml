@@ -35,4 +35,5 @@ services:
       - DBUSER=${DBUSER}
       - DBDATABASE=${DBDATABASE}
       - DBPASSWORD=${DBPASSWORD}
+      - JWTSECRET=${JWTSECRET}
     command: pnpm serve:prod

@@ -27,7 +27,7 @@ class AuthController {
                 const token = sign(
                     {
                         userId: user.id,
-                        email,
+                        email: email,
                         date: new Date().getTime(),
                     },
                     config.jwt_secret,
