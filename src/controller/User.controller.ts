@@ -18,6 +18,7 @@ class UserController {
         if (!(email && password && name)) {
             ctx.status = 400;
             ctx.message = "email or password or name is missing";
+            return;
         }
 
         // check if user exists
@@ -25,6 +26,7 @@ class UserController {
         if (oldUser) {
             ctx.state = 400;
             ctx.message = "user with email already exists";
+            return;
         }
 
         const user: User = new User();
