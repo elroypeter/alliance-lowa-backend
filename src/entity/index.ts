@@ -3,6 +3,7 @@ import { User } from "./User";
 import { ImageSlider } from "./ImageSlider";
 import { Project } from "./Project";
 import { ProjectImage } from "./ProjectImage";
+import { ContactMessage } from "./ContactMessage";
 
 export const RegisteredEntities = [
     Subscriber,
@@ -10,4 +11,5 @@ export const RegisteredEntities = [
     ImageSlider,
     Project,
     ProjectImage,
+    ContactMessage,
 ];
