@@ -5,8 +5,16 @@ import { auth } from "./auth";
 import { user } from "./user";
 import { imageSlider } from "./imageSlider";
 import { project } from "./project";
+import { message } from "./message";
 
-const routes = [...subscriber, ...auth, ...user, ...imageSlider, ...project];
+const routes = [
+    ...subscriber,
+    ...auth,
+    ...user,
+    ...imageSlider,
+    ...project,
+    ...message,
+];
 
 export const Routes = (router) => {
     const config = (route) => {
