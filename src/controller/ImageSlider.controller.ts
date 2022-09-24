@@ -1,5 +1,6 @@
 import { Context, Next } from "koa";
 import { ImageSlider } from "../entity/ImageSlider";
+import { CreateFile, DeleteFile } from "../services/ManageFile";
 
 class ImageSliderController {
     constructor() {}
@@ -10,12 +11,22 @@ class ImageSliderController {
         ctx.body = imageSlider;
     }
 
+    async getPublishedImageSlider(ctx: Context, next: Next) {
+        const imageSlider: ImageSlider[] = await ImageSlider.find({
+            where: { isPublished: true },
+        });
+        ctx.status = 200;
+        ctx.body = imageSlider;
+    }
+
     async saveImageSlider(ctx: Context, next: Next) {
         const imageSlider: ImageSlider = new ImageSlider();
         const { title, image, description } = ctx.request.body;
 
         imageSlider.title = title;
-        imageSlider.image = image;
+        const fileData = await CreateFile(image);
+        imageSlider.image = fileData.image;
+        imageSlider.filePath = fileData.filePath;
         imageSlider.description = description;
 
         await imageSlider.save();
@@ -31,8 +42,14 @@ class ImageSliderController {
         const { title, image, description } = ctx.request.body;
 
         imageSlider.title = title;
-        imageSlider.image = image;
         imageSlider.description = description;
+
+        if (imageSlider.image !== image) {
+            await DeleteFile(imageSlider.filePath);
+            const fileData = await CreateFile(image);
+            imageSlider.image = fileData.image;
+            imageSlider.filePath = fileData.filePath;
+        }
 
         await imageSlider.save();
         ctx.body = { message: "updated successfully" };
@@ -54,6 +71,7 @@ class ImageSliderController {
         const imageSlider: ImageSlider = await ImageSlider.findOneBy({
             id: ctx.params.id,
         });
+        await DeleteFile(imageSlider.filePath);
         await imageSlider.remove();
         ctx.body = { message: "removed successfully" };
         ctx.status = 200;

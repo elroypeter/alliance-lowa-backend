@@ -51,7 +51,7 @@ export const imageSlider = [
         "@name": "getWebImageSlider",
         "@path": "/website/image-slider",
         "@httpMethod": "get",
-        "@action": ImageSliderController.getImageSlider,
+        "@action": ImageSliderController.getPublishedImageSlider,
         "@guards": [],
     },
 ];

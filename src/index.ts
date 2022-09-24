@@ -1,11 +1,14 @@
 import "reflect-metadata";
 import { AppDataSource } from "./data-source";
 
+import * as Path from "path";
 import * as Koa from "koa";
 import * as Logger from "koa-logger";
 import * as Router from "@koa/router";
 import * as KoaBody from "koa-body";
 import * as KoaCors from "@koa/cors";
+import * as KoaMount from "koa-mount";
+import * as KoaStatic from "koa-static";
 import * as KoaCompress from "koa-compress";
 import * as KoaRateLimit from "koa-better-ratelimit";
 
@@ -21,8 +24,13 @@ AppDataSource.initialize()
 
         // bind middleware to Koa instance
         app.use(Logger());
-        app.use(KoaBody());
+        app.use(KoaBody({ jsonLimit: "20mb" }));
         app.use(KoaCors());
+
+        // mount image server middleware
+        app.use(
+            KoaMount("/images", KoaStatic(Path.join(__dirname, "../public")))
+        );
 
         // compress traffic
         const compressOpts = {
