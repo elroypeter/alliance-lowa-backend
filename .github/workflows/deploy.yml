@@ -38,6 +38,7 @@ jobs:
                       export DBPASSWORD=${{ secrets.DBPASSWORD }}
                       export DBVOLUME=${{ secrets.DBVOLUME }}
                       export JWTSECRET=${{ secrets.JWTSECRET }}
+                      export IMAGEDIR=${{ secrets.IMAGEDIR }}
                       cd ~/backend
                       sudo chmod u+x start_script.sh
                       ./start_script.sh

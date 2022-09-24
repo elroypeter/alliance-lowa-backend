@@ -5,3 +5,4 @@ env.yml
 .env
 docker-compose.dev.yml
 db
+public/*

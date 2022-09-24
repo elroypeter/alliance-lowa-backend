@@ -17,6 +17,7 @@ services:
     volumes:
       # volume attaches to local file system
       - ${DBVOLUME}:/var/lib/mysql
+      - ${IMAGEDIR}:/app/public
       # named volume eg
       # mysql-db:/var/lib/mysql where mysql-db is name of volume
 

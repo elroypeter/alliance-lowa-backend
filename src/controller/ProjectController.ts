@@ -2,6 +2,7 @@ import { Context, Next } from "koa";
 import slugfiy from "slugify";
 import { Project } from "../entity/Project";
 import { ProjectImage } from "../entity/ProjectImage";
+import { CreateFile, DeleteFile } from "../services/ManageFile";
 
 class ProjectController {
     constructor() {}
@@ -42,7 +43,9 @@ class ProjectController {
 
         const { image } = ctx.request.body;
         const projectImage: ProjectImage = new ProjectImage();
-        projectImage.imageData = image;
+        const fileData = await CreateFile(image);
+        projectImage.imageData = fileData.image;
+        projectImage.filePath = fileData.filePath;
         await projectImage.save();
 
         projects[0].images.push(projectImage);
@@ -55,6 +58,7 @@ class ProjectController {
         const projectImage: ProjectImage = await ProjectImage.findOneBy({
             id: ctx.params.id,
         });
+        await DeleteFile(projectImage.filePath);
         await projectImage.remove();
         ctx.body = { message: "removed successfully" };
         ctx.status = 200;

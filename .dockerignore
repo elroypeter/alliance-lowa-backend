@@ -6,3 +6,4 @@ Dockerfile
 pnpm-lock.yaml
 docker-compose*
 db
+public

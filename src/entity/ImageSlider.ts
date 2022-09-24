@@ -8,8 +8,11 @@ export class ImageSlider extends BaseEntity {
     @Column({ length: 255 })
     title: string;
 
-    @Column({ type: "longtext" })
+    @Column({ length: 255 })
     image: string;
+
+    @Column({ length: 255 })
+    filePath: string;
 
     @Column({ type: "boolean", default: false })
     isPublished: boolean;
