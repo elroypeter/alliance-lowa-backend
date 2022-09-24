@@ -10,6 +10,8 @@ COPY package.json .
 
 RUN pnpm install
 
+RUN mkdir public 
+
 COPY . .
 EXPOSE ${PORT}
 CMD ["pnpm", "serve:prod"]
