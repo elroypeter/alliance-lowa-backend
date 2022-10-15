@@ -1,6 +1,7 @@
 import { Context, Next } from "koa";
 import { User } from "../entity/User";
 import * as Bcrypt from "bcrypt";
+import { PublicUser } from "../interface/user.interface";
 
 class UserController {
     constructor() {}
@@ -8,7 +9,19 @@ class UserController {
     async getUsers(ctx: Context, next: Next) {
         const users: User[] = await User.find();
         ctx.status = 200;
-        ctx.body = users;
+        ctx.body = this.tranformToPublicUsers(users);
+    }
+
+    private tranformToPublicUsers(users: User[]): Pick<User, PublicUser>[]{
+        return users.map((user: User) => this.publiclyAccessibleUser(user))
+    }
+
+    private publiclyAccessibleUser(user: User): Pick<User, PublicUser>{
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email
+        }
     }
 
     async saveUser(ctx: Context, next: Next) {
