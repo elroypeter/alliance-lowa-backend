@@ -2,12 +2,12 @@ import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
-    BaseEntity,
-    OneToMany,
+    BaseEntity
 } from "typeorm";
+import { IContactMessage } from "../interface/contact-message.interface";
 
-@Entity()
-export class ContactMessage extends BaseEntity {
+@Entity('contact-message')
+export class ContactMessageEntity extends BaseEntity implements IContactMessage {
     @PrimaryGeneratedColumn()
     id: number;
 

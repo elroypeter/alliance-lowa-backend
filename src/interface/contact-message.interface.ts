@@ -1,6 +1,6 @@
-export interface ContactMessage{
+export interface IContactMessage{
     email: string;
     name: string;
-    subject: string;
+    mobile: string;
     message: string;
 }

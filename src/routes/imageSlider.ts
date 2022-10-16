@@ -12,46 +12,46 @@ import { authGuard } from "../middleware/auth.middleware";
  *    }
  */
 export const imageSlider = [
-    {
-        "@name": "getImageSlider",
-        "@path": "/image-slider",
-        "@httpMethod": "get",
-        "@action": ImageSliderController.getImageSlider,
-        "@guards": [authGuard],
-    },
-    {
-        "@name": "saveImageSlider",
-        "@path": "/image-slider",
-        "@httpMethod": "post",
-        "@action": ImageSliderController.saveImageSlider,
-        "@guards": [authGuard],
-    },
-    {
-        "@name": "updateImageSlider",
-        "@path": "/image-slider/:id",
-        "@httpMethod": "put",
-        "@action": ImageSliderController.updateImageSlider,
-        "@guards": [authGuard],
-    },
-    {
-        "@name": "publishImageSlider",
-        "@path": "/image-slider/publish/:id",
-        "@httpMethod": "put",
-        "@action": ImageSliderController.publishImageSlider,
-        "@guards": [authGuard],
-    },
-    {
-        "@name": "deleteImageSlider",
-        "@path": "/image-slider/:id",
-        "@httpMethod": "delete",
-        "@action": ImageSliderController.deleteImageSlider,
-        "@guards": [authGuard],
-    },
-    {
-        "@name": "getWebImageSlider",
-        "@path": "/website/image-slider",
-        "@httpMethod": "get",
-        "@action": ImageSliderController.getPublishedImageSlider,
-        "@guards": [],
-    },
+    // {
+    //     "@name": "getImageSlider",
+    //     "@path": "/image-slider",
+    //     "@httpMethod": "get",
+    //     "@action": ImageSliderController.getImageSlider,
+    //     "@guards": [authGuard],
+    // },
+    // {
+    //     "@name": "saveImageSlider",
+    //     "@path": "/image-slider",
+    //     "@httpMethod": "post",
+    //     "@action": ImageSliderController.saveImageSlider,
+    //     "@guards": [authGuard],
+    // },
+    // {
+    //     "@name": "updateImageSlider",
+    //     "@path": "/image-slider/:id",
+    //     "@httpMethod": "put",
+    //     "@action": ImageSliderController.updateImageSlider,
+    //     "@guards": [authGuard],
+    // },
+    // {
+    //     "@name": "publishImageSlider",
+    //     "@path": "/image-slider/publish/:id",
+    //     "@httpMethod": "put",
+    //     "@action": ImageSliderController.publishImageSlider,
+    //     "@guards": [authGuard],
+    // },
+    // {
+    //     "@name": "deleteImageSlider",
+    //     "@path": "/image-slider/:id",
+    //     "@httpMethod": "delete",
+    //     "@action": ImageSliderController.deleteImageSlider,
+    //     "@guards": [authGuard],
+    // },
+    // {
+    //     "@name": "getWebImageSlider",
+    //     "@path": "/website/image-slider",
+    //     "@httpMethod": "get",
+    //     "@action": ImageSliderController.getPublishedImageSlider,
+    //     "@guards": [],
+    // },
 ];

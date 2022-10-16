@@ -12,25 +12,25 @@ import { authGuard } from "../middleware/auth.middleware";
  *    }
  */
 export const subscriber = [
-    {
-        "@name": "getSubscribers",
-        "@path": "/subscriber",
-        "@httpMethod": "get",
-        "@action": SubscriberController.getSubscribers,
-        "@guards": [authGuard],
-    },
-    {
-        "@name": "saveSubscriber",
-        "@path": "/subscriber",
-        "@httpMethod": "post",
-        "@action": SubscriberController.saveSubscriber,
-        "@guards": [],
-    },
-    {
-        "@name": "deleteSubscriber",
-        "@path": "/subscriber/:id",
-        "@httpMethod": "delete",
-        "@action": SubscriberController.deleteSubscriber,
-        "@guards": [authGuard],
-    },
+    // {
+    //     "@name": "getSubscribers",
+    //     "@path": "/subscriber",
+    //     "@httpMethod": "get",
+    //     "@action": SubscriberController.getSubscribers,
+    //     "@guards": [authGuard],
+    // },
+    // {
+    //     "@name": "saveSubscriber",
+    //     "@path": "/subscriber",
+    //     "@httpMethod": "post",
+    //     "@action": SubscriberController.saveSubscriber,
+    //     "@guards": [],
+    // },
+    // {
+    //     "@name": "deleteSubscriber",
+    //     "@path": "/subscriber/:id",
+    //     "@httpMethod": "delete",
+    //     "@action": SubscriberController.deleteSubscriber,
+    //     "@guards": [authGuard],
+    // },
 ];

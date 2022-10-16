@@ -1,3 +1,3 @@
-export interface Subcriber{
+export interface ISubcriber{
     email: string;
 }

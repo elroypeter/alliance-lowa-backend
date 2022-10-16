@@ -1,14 +1,15 @@
 import { LocaleString } from "../locale/locale-types";
+import { IPublishStatus } from "./image-slider.interface";
 
-export interface Project{
+export interface IProject{
     title: LocaleString;
     slug: LocaleString;
     description: LocaleString;
-    isPublished: boolean;
-    attachments: ProjectAttachment[];
+    attachments: IProjectAttachment[];
+    isPublished: IPublishStatus;
 }
 
-export interface ProjectAttachment{
+export interface IProjectAttachment{
     altText: string;
     filePath: string;
     isVideo: boolean;

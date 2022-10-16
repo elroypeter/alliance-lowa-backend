@@ -12,18 +12,18 @@ import { authGuard } from "../middleware/auth.middleware";
  *    }
  */
 export const message = [
-    {
-        "@name": "getMessages",
-        "@path": "/messages",
-        "@httpMethod": "get",
-        "@action": MessageController.getMessages,
-        "@guards": [authGuard],
-    },
-    {
-        "@name": "saveMessage",
-        "@path": "/contact-message",
-        "@httpMethod": "post",
-        "@action": MessageController.saveMessage,
-        "@guards": [],
-    },
+    // {
+    //     "@name": "getMessages",
+    //     "@path": "/messages",
+    //     "@httpMethod": "get",
+    //     "@action": MessageController.getMessages,
+    //     "@guards": [authGuard],
+    // },
+    // {
+    //     "@name": "saveMessage",
+    //     "@path": "/contact-message",
+    //     "@httpMethod": "post",
+    //     "@action": MessageController.saveMessage,
+    //     "@guards": [],
+    // },
 ];

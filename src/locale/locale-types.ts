@@ -8,7 +8,7 @@ export type NonTranslateableKeys<T> = {
     [K in keyof T]: T[K] extends LocaleString ? never : K;
 }[keyof T]
 
-export type Translatable<T> = { [K in NonTranslateableKeys<T>]: T[K] extends Array<any> ? Array<Translatable<T[K][number]>> : T[K] } & 
+export type Translatable<T> = { [K in NonTranslateableKeys<T>]: T[K] } & 
                               { [K in TranslatableKeys<T>]?: never } &
                               { translations: Translation<T>[] }
 

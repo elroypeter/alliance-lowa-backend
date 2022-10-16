@@ -1,5 +1,5 @@
 
-export interface User{
+export interface IUser{
     id: number;
     email: string;
     name: string;
@@ -8,4 +8,4 @@ export interface User{
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-export type PublicUser = keyof Omit<User, 'password'>;
+export type IPublicUser = keyof Omit<IUser, 'password'>;

@@ -11,11 +11,11 @@ import { AuthControllerObj as AuthController } from "../controller/Auth.controll
  *    }
  */
 export const auth = [
-    {
-        "@name": "login",
-        "@path": "/login",
-        "@httpMethod": "post",
-        "@action": AuthController.login,
-        "@guards": [],
-    },
+    // {
+    //     "@name": "login",
+    //     "@path": "/login",
+    //     "@httpMethod": "post",
+    //     "@action": AuthController.login,
+    //     "@guards": [],
+    // },
 ];

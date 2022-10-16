@@ -1,15 +1,27 @@
-import { Subscriber } from "./Subscriber";
-import { User } from "./User";
-import { ImageSlider } from "./ImageSlider";
-import { Project } from "./Project";
-import { ProjectImage } from "./ProjectImage";
-import { ContactMessage } from "./ContactMessage";
+import { SubscriberEntity } from "./Subscriber.entity";
+import { UserEntity } from "./User.entity";
+import { ImageSliderEntity } from "./ImageSlider.entity";
+import { ProjectEntity } from "./Project.entity";
+import { ContactMessageEntity } from "./ContactMessage.entity";
+import { BlogNewsEntity } from "./BlogNews.entity";
+import { BlogNewsTranslationEntity } from "./BlogNewsTranslation.entity";
+import { CareerEntity } from "./Career.entity";
+import { ImageSliderTranslationEntity } from "./ImageSliderTranslation.Entity";
+import { ProjectAttachmentEntity } from "./ProjectAttachment.entity";
+import { ProjectTranslationEntity } from "./ProjectTranslationEntity";
+import { PublishStatusEntity } from "./Publish.entity";
 
 export const RegisteredEntities = [
-    Subscriber,
-    User,
-    ImageSlider,
-    Project,
-    ProjectImage,
-    ContactMessage,
+    SubscriberEntity,
+    UserEntity,
+    ImageSliderEntity,
+    ProjectEntity,
+    ContactMessageEntity,
+    BlogNewsEntity,
+    BlogNewsTranslationEntity,
+    CareerEntity,
+    ImageSliderTranslationEntity,
+    ProjectAttachmentEntity,
+    ProjectTranslationEntity,
+    PublishStatusEntity
 ];

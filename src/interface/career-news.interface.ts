@@ -1,14 +1,15 @@
 import { LocaleString } from "../locale/locale-types";
+import { IPublishStatus } from "./image-slider.interface";
 
-export interface Career{
+export interface ICareer{
     title: string;
     description: string;
 }
 
-export interface BlogNews{
+export interface IBlogNews{
     filePath: string;
     imageName: string;
-    isPublished: boolean;
+    isPublished: IPublishStatus;
     title: LocaleString
     slug: LocaleString;
     description: LocaleString
