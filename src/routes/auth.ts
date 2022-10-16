@@ -1,4 +1,5 @@
-import { AuthControllerObj as AuthController } from "../controller/Auth.controller";
+import { DataSource } from 'typeorm';
+import { AuthControllerObj as AuthController } from '../controller/Auth.controller';
 
 /**
  * routes format
@@ -10,12 +11,12 @@ import { AuthControllerObj as AuthController } from "../controller/Auth.controll
  *       "@guards": [middleware, generators],
  *    }
  */
-export const auth = [
-    // {
-    //     "@name": "login",
-    //     "@path": "/login",
-    //     "@httpMethod": "post",
-    //     "@action": AuthController.login,
-    //     "@guards": [],
-    // },
+export const auth = (dataSource: DataSource) => [
+  {
+    '@name': 'login',
+    '@path': '/login',
+    '@httpMethod': 'post',
+    '@action': AuthController(dataSource).login,
+    '@guards': [],
+  },
 ];

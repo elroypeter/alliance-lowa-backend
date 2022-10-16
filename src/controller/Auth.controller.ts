@@ -1,58 +1,33 @@
-import { Context, Next } from "koa";
-import { UserEntity } from "../entity/User.entity";
-import * as Bcrypt from "bcrypt";
-import { sign } from "jsonwebtoken";
-import { config } from "../config";
+import { Context } from 'koa';
+import { DataSource } from 'typeorm';
+import { ResponseCode } from '../enums/response.enums';
+import { UserRepository } from '../repository/User.repository';
+import { AuthService } from '../services/Auth.service';
+import { ResponseService } from '../services/Response.service';
+import { UserService } from '../services/User.service';
 
 class AuthController {
-    constructor() {}
+  constructor(private authService: AuthService) {}
 
-    // async login(ctx: Context, next: Next) {
-    //     try {
-    //         const { email, password } = ctx.request.body;
+  async login(ctx: Context) {
+    const { email, password }: any = ctx.body;
 
-    //         if (!(email && password)) {
-    //             ctx.status = 400;
-    //             ctx.body = { message: "all input is required" };
-    //             return;
-    //         }
+    if (!(email && password)) {
+      ResponseService.throwReponseException(
+        ctx,
+        'Invalid credentials',
+        ResponseCode.UNAUTHORIZED,
+      );
+      return;
+    }
 
-    //         const user: User = await User.findOneBy({ email });
-    //         const isMatch = await Bcrypt.compare(password, user.password);
+    const token = await this.authService.createToken(email, password, ctx);
 
-    //         if (user && isMatch) {
-    //             // create token
-    //             const token = sign(
-    //                 {
-    //                     userId: user.id,
-    //                     email: email,
-    //                     date: new Date().getTime(),
-    //                 },
-    //                 config.jwt_secret,
-    //                 { expiresIn: config.token_ttl }
-    //             );
-
-    //             ctx.state = 200;
-    //             ctx.body = {
-    //                 token,
-    //                 email,
-    //                 id: user.id,
-    //                 name: user.name,
-    //             };
-    //             return;
-    //         }
-
-    //         ctx.status = 400;
-    //         ctx.message = "Invalid Credentails";
-    //         return;
-    //     } catch (error) {
-    //         ctx.status = 400;
-    //         ctx.message = error;
-    //         return;
-    //     }
-    // }
-
-    // async changePassword(ctx: Context, next: Next) {}
+    return ResponseService.res(ctx, 200, { token });
+  }
 }
 
-export const AuthControllerObj = new AuthController();
+export const AuthControllerObj = (dataSource?: DataSource) =>
+  new AuthController(
+    new AuthService(new UserService(new UserRepository(dataSource))),
+  );
