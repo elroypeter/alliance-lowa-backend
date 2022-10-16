@@ -4,14 +4,14 @@ module.exports = {
     commonjs: true,
     es2021: true,
   },
+  parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ],
-  parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
