@@ -5,26 +5,27 @@ import { user } from './user';
 import { imageSlider } from './imageSlider';
 import { project } from './project';
 import { message } from './message';
-import { DataSource } from 'typeorm';
+import { App } from '../bootstrap';
+import { Route } from '../types/route.types';
 
-const routes = (dataSource: DataSource) => [
+const routes = (app: App) => [
   ...subscriber,
-  ...auth(dataSource),
+  ...auth(app),
   ...user,
   ...imageSlider,
   ...project,
   ...message,
 ];
 
-export const Routes = (router, dataSource: DataSource) => {
-  const config = (route) => {
-    router[route['@httpMethod']](
-      route['@path'],
-      compose([...route['@guards'], route['@action']]),
+export const Routes = (router, app: App) => {
+  const config = (route: Route) => {
+    router[route.httpMethod](
+      route.path,
+      compose([...route.guards, route.action]),
     );
   };
 
-  routes(dataSource).forEach((route) => {
+  routes(app).forEach((route) => {
     config(route);
   });
 };

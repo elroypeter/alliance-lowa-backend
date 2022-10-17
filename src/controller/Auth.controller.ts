@@ -1,5 +1,6 @@
 import { Context } from 'koa';
-import { DataSource } from 'typeorm';
+import { App } from '../bootstrap';
+import { RouteAction } from '../types/route.types';
 import { ResponseCode } from '../enums/response.enums';
 import { UserRepository } from '../repository/User.repository';
 import { AuthService } from '../services/Auth.service';
@@ -7,10 +8,14 @@ import { ResponseService } from '../services/Response.service';
 import { UserService } from '../services/User.service';
 
 class AuthController {
-  constructor(private authService: AuthService) {}
+  authService: AuthService;
 
-  async login(ctx: Context) {
-    const { email, password }: any = ctx.body;
+  constructor(authService: AuthService) {
+    this.authService = authService;
+  }
+
+  login = async (ctx: Context): Promise<RouteAction> => {
+    const { email, password }: any = ctx.request.body;
 
     if (!(email && password)) {
       ResponseService.throwReponseException(
@@ -22,12 +27,12 @@ class AuthController {
     }
 
     const token = await this.authService.createToken(email, password, ctx);
-
-    return ResponseService.res(ctx, 200, { token });
-  }
+    ResponseService.res(ctx, 200, { token });
+    return;
+  };
 }
 
-export const AuthControllerObj = (dataSource?: DataSource) =>
+export const getAuthController = (app?: App) =>
   new AuthController(
-    new AuthService(new UserService(new UserRepository(dataSource))),
+    new AuthService(new UserService(new UserRepository(app.dataSource))),
   );

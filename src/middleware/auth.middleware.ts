@@ -1,38 +1,34 @@
 import { Context, Next } from 'koa';
-import { config } from '../config';
 import { JwtPayload, verify } from 'jsonwebtoken';
+import { RouteGuard } from 'src/types/route.types';
+import { configService } from 'src/config';
+import { ResponseCode } from 'src/enums/response.enums';
 
-export const authGuard = (ctx: Context, next: Next) => {
+export const authGuard: RouteGuard = async (ctx: Context, next: Next) => {
   const token = ctx.request.headers.token;
 
   if (!token) {
-    ctx.status = 400;
-    ctx.message = 'missing token';
     ctx.body = { message: 'token is required for authentication' };
-    return;
+    ctx.status = ResponseCode.BAD_REQUEST;
   } else {
     try {
       const payload: string | JwtPayload = verify(
         String(token),
-        config.jwt_secret,
+        configService().jwt_secret,
       );
 
       // check if token has expired
       const dateNow = new Date();
 
       if (payload['exp'] * 1000 > dateNow.getTime()) {
-        return next();
+        await next();
       } else {
-        ctx.status = 400;
-        ctx.message = 'token has expired';
-        ctx.body = { message: 'expired' };
-        return;
+        ctx.body = { message: 'token has expired' };
+        ctx.status = ResponseCode.BAD_REQUEST;
       }
     } catch (error) {
-      ctx.status = 401;
-      ctx.message = 'Unauthorized';
       ctx.body = { message: 'Invalid Token' };
-      return;
+      ctx.status = 401;
     }
   }
 };

@@ -1,22 +1,13 @@
-import { DataSource } from 'typeorm';
-import { AuthControllerObj as AuthController } from '../controller/Auth.controller';
+import { App } from '../bootstrap';
+import { Route } from '../types/route.types';
+import { getAuthController } from '../controller/Auth.controller';
 
-/**
- * routes format
- *     {
- *       "@name": "route name",
- *       "@path": "/path_url",
- *       "@httpMethod": "get|post|put|patch|delete",
- *       "@action": controller method,
- *       "@guards": [middleware, generators],
- *    }
- */
-export const auth = (dataSource: DataSource) => [
+export const auth = (app: App): Route[] => [
   {
-    '@name': 'login',
-    '@path': '/login',
-    '@httpMethod': 'post',
-    '@action': AuthController(dataSource).login,
-    '@guards': [],
+    name: 'login',
+    path: '/login',
+    httpMethod: 'post',
+    action: getAuthController(app).login,
+    guards: [],
   },
 ];

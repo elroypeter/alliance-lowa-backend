@@ -2,9 +2,13 @@ import { IUser } from '../interface/user.interface';
 import { UserRepository } from '../repository/User.repository';
 
 export class UserService {
-  constructor(private userRepository: UserRepository) {}
+  userRepository: UserRepository;
+
+  constructor(userRepository: UserRepository) {
+    this.userRepository = userRepository;
+  }
 
   async findUserByEmail(email: string): Promise<IUser> {
-    return this.userRepository.findUserByEmail(email);
+    return await this.userRepository.findUserByEmail(email);
   }
 }
