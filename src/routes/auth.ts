@@ -5,7 +5,21 @@ import { getAuthController } from '../controller/Auth.controller';
 export const auth = (app: App): Route[] => [
   {
     name: 'login',
-    path: '/login',
+    path: '/auth/login',
+    httpMethod: 'post',
+    action: getAuthController(app).login,
+    guards: [],
+  },
+  {
+    name: 'resetPassword',
+    path: '/auth/reset-password',
+    httpMethod: 'post',
+    action: getAuthController(app).resetPassword,
+    guards: [],
+  },
+  {
+    name: 'changePassword',
+    path: '/auth/change-password',
     httpMethod: 'post',
     action: getAuthController(app).login,
     guards: [],

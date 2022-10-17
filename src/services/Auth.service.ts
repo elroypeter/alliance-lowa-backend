@@ -4,14 +4,20 @@ import { Context } from 'koa';
 import { configService } from '../config';
 import { ResponseCode } from '../enums/response.enums';
 import { IUser } from '../interface/user.interface';
+import { NotificationService } from './Notification.service';
 import { ResponseService } from './Response.service';
 import { UserService } from './User.service';
 
 export class AuthService {
   userService: UserService;
+  notificationService: NotificationService;
 
-  constructor(userService: UserService) {
+  constructor(
+    userService: UserService,
+    notificationService: NotificationService,
+  ) {
     this.userService = userService;
+    this.notificationService = notificationService;
   }
 
   async comparePassword(
@@ -55,5 +61,17 @@ export class AuthService {
       configService().jwt_secret,
       { expiresIn: configService().token_ttl },
     );
+  }
+
+  async sendResetLink(ctx: Context, email: string) {
+    const user: IUser = await this.userService.findUserByEmail(email);
+    if (!user) {
+      ResponseService.throwReponseException(
+        ctx,
+        'User with email not found',
+        ResponseCode.BAD_REQUEST,
+      );
+    }
+    await this.notificationService.sendEmail(user.email, {}, {});
   }
 }
