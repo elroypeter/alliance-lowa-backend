@@ -1,5 +1,5 @@
 import { hashPassword } from '../utils/hash.utils';
-import { IUser } from '../interface/user.interface';
+import { IPublicUser, IUser } from '../interface/user.interface';
 import { UserRepository } from '../repository/User.repository';
 
 export class UserService {
@@ -23,5 +23,13 @@ export class UserService {
 
     async assignUserResetCode(id: number, passwordResetCode: string): Promise<any> {
         return await this.userRepository.update({ id }, { passwordResetCode });
+    }
+
+    static publiclyAccessibleUser(user: IUser): Pick<IUser, IPublicUser> {
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+        };
     }
 }

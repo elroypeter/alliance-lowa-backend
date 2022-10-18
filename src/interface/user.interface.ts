@@ -8,4 +8,4 @@ export interface IUser {
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-export type IPublicUser = keyof Omit<IUser, 'password'>;
+export type IPublicUser = keyof Omit<IUser, 'password' | 'passwordResetCode'>;

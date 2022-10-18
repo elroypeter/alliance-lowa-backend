@@ -28,6 +28,7 @@ describe('Authentication Login', () => {
     it('user signs in successfully', async () => {
         const response = await Request(TestApp.koaInstance.callback()).post('/auth/login').send({ email: 'test@gmail.com', password: 'test' });
         expect(response.status).toEqual(ResponseCode.OK);
+        expect(response.body.token).toBeDefined();
     });
 
     it('user cannot sign in with invalid password', async () => {

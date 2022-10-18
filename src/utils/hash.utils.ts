@@ -20,7 +20,7 @@ export const getTokenPayLoad = (token: string, ignoreExpiration?: boolean): stri
     try {
         payload = verify(String(token), configService().jwt_secret, { ignoreExpiration });
     } catch (error) {
-        payload = { exp: 0 };
+        payload = { exp: 0, userId: null };
     }
     return payload;
 };

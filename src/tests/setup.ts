@@ -52,8 +52,6 @@ const TestAppInstance = async (): Promise<App> => {
     });
 
     TestDataSource = await TestDataSource.initialize();
-
     TestApp = await new App(configService(RegisteredEntities, '../env.test.yml'), TestDataSource).initApp({ enableKoaLogger: false });
-
     return TestApp;
 };

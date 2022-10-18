@@ -8,7 +8,7 @@ import { message } from './message';
 import { App } from '../bootstrap';
 import { Route } from '../types/route.types';
 
-const routes = (app: App) => [...subscriber, ...auth(app), ...user, ...imageSlider, ...project, ...message];
+const routes = (app: App) => [...subscriber, ...auth(app), ...user, ...imageSlider(app), ...project, ...message];
 
 export const Routes = (router, app: App) => {
     const config = (route: Route) => {

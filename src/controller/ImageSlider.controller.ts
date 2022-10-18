@@ -1,63 +1,24 @@
+import { Context } from 'koa';
+import { App } from '../bootstrap';
+import { ResponseCode } from '../enums/response.enums';
+import { ImageSliderService } from '../services/ImageSlider.service';
+import { ResponseService } from '../services/Response.service';
+import { ImageSliderRepository } from '../repository/ImageSlider.repository';
+import { RouteAction } from '../types/route.types';
+import { IImageSlider } from '../interface/image-slider.interface';
+
 class ImageSliderController {
-    // async getImageSlider(ctx: Context, next: Next) {
-    //     const imageSlider: IImageSlider[] = await ImageSliderEntity.find();
-    //     ctx.status = 200;
-    //     ctx.body = imageSlider;
-    // }
-    // async getPublishedImageSlider(ctx: Context, next: Next) {
-    //     const imageSlider: ImageSlider[] = await ImageSlider.find({
-    //         where: { isPublished: true },
-    //     });
-    //     ctx.status = 200;
-    //     ctx.body = imageSlider;
-    // }
-    // async saveImageSlider(ctx: Context, next: Next) {
-    //     const imageSlider: ImageSlider = new ImageSlider();
-    //     const { title, image, description } = ctx.request.body;
-    //     imageSlider.title = title;
-    //     const fileData = await CreateFile(image);
-    //     imageSlider.image = fileData.image;
-    //     imageSlider.filePath = fileData.filePath;
-    //     imageSlider.description = description;
-    //     await imageSlider.save();
-    //     ctx.body = { message: "saved successfully" };
-    //     ctx.status = 200;
-    // }
-    // async updateImageSlider(ctx: Context, next: Next) {
-    //     const imageSlider: ImageSlider = await ImageSlider.findOneBy({
-    //         id: ctx.params.id,
-    //     });
-    //     const { title, image, description } = ctx.request.body;
-    //     imageSlider.title = title;
-    //     imageSlider.description = description;
-    //     if (imageSlider.image !== image) {
-    //         await DeleteFile(imageSlider.filePath);
-    //         const fileData = await CreateFile(image);
-    //         imageSlider.image = fileData.image;
-    //         imageSlider.filePath = fileData.filePath;
-    //     }
-    //     await imageSlider.save();
-    //     ctx.body = { message: "updated successfully" };
-    //     ctx.status = 200;
-    // }
-    // async publishImageSlider(ctx: Context, next: Next) {
-    //     const imageSlider: ImageSlider = await ImageSlider.findOneBy({
-    //         id: ctx.params.id,
-    //     });
-    //     imageSlider.isPublished = ctx.request.body.status;
-    //     await imageSlider.save();
-    //     ctx.body = { message: "updated successfully" };
-    //     ctx.status = 200;
-    // }
-    // async deleteImageSlider(ctx: Context, next: Next) {
-    //     const imageSlider: ImageSlider = await ImageSlider.findOneBy({
-    //         id: ctx.params.id,
-    //     });
-    //     await DeleteFile(imageSlider.filePath);
-    //     await imageSlider.remove();
-    //     ctx.body = { message: "removed successfully" };
-    //     ctx.status = 200;
-    // }
+    imageSliderService: ImageSliderService;
+
+    constructor(imageSliderService: ImageSliderService) {
+        this.imageSliderService = imageSliderService;
+    }
+
+    getImageSlider = async (ctx: Context): Promise<RouteAction> => {
+        const imageSliders: IImageSlider[] = await this.imageSliderService.getImageSliders();
+        ResponseService.res(ctx, ResponseCode.OK, imageSliders);
+        return;
+    };
 }
 
-export const ImageSliderControllerObj = new ImageSliderController();
+export const getImageSliderController = (app?: App) => new ImageSliderController(new ImageSliderService(new ImageSliderRepository(app.dataSource)));
