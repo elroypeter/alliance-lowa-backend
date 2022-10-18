@@ -9,25 +9,25 @@
  *    }
  */
 export const user = [
-  // {
-  //     "@name": "getUsers",
-  //     "@path": "/user",
-  //     "@httpMethod": "get",
-  //     "@action": UserController.getUsers,
-  //     "@guards": [authGuard],
-  // },
-  // {
-  //     "@name": "saveUser",
-  //     "@path": "/user",
-  //     "@httpMethod": "post",
-  //     "@action": UserController.saveUser,
-  //     "@guards": [],
-  // },
-  // {
-  //     "@name": "deleteUser",
-  //     "@path": "/user/:id",
-  //     "@httpMethod": "delete",
-  //     "@action": UserController.deleteUser,
-  //     "@guards": [authGuard],
-  // },
+    // {
+    //     "@name": "getUsers",
+    //     "@path": "/user",
+    //     "@httpMethod": "get",
+    //     "@action": UserController.getUsers,
+    //     "@guards": [authGuard],
+    // },
+    // {
+    //     "@name": "saveUser",
+    //     "@path": "/user",
+    //     "@httpMethod": "post",
+    //     "@action": UserController.saveUser,
+    //     "@guards": [],
+    // },
+    // {
+    //     "@name": "deleteUser",
+    //     "@path": "/user/:id",
+    //     "@httpMethod": "delete",
+    //     "@action": UserController.deleteUser,
+    //     "@guards": [authGuard],
+    // },
 ];

@@ -1,3 +1,3 @@
 export interface ISubcriber {
-  email: string;
+    email: string;
 }

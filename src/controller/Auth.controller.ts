@@ -6,44 +6,44 @@ import { UserRepository } from '../repository/User.repository';
 import { AuthService } from '../services/Auth.service';
 import { ResponseService } from '../services/Response.service';
 import { UserService } from '../services/User.service';
-import { NotificationService } from 'src/services/Notification.service';
+import { NotificationService } from '../services/Notification.service';
 
 class AuthController {
-  authService: AuthService;
+    authService: AuthService;
 
-  constructor(authService: AuthService) {
-    this.authService = authService;
-  }
-
-  login = async (ctx: Context): Promise<RouteAction> => {
-    const { email, password }: any = ctx.request.body;
-
-    if (!(email && password)) {
-      ResponseService.throwReponseException(
-        ctx,
-        'Invalid credentials',
-        ResponseCode.UNAUTHORIZED,
-      );
-      return;
+    constructor(authService: AuthService) {
+        this.authService = authService;
     }
 
-    const token = await this.authService.createToken(email, password, ctx);
-    ResponseService.res(ctx, 200, { token });
-    return;
-  };
+    login = async (ctx: Context): Promise<RouteAction> => {
+        const { email, password }: any = ctx.request.body;
+        const token = await this.authService.createToken(email, password, ctx);
+        ResponseService.res(ctx, ResponseCode.OK, { token });
+        return;
+    };
 
-  resetPassword = async (ctx: Context): Promise<RouteAction> => {
-    const { email }: any = ctx.request.body;
-    this.authService.sendResetLink(ctx, email);
-    ResponseService.res(ctx, 200, null, 'reset link has been sent');
-    return;
-  };
+    resetPassword = async (ctx: Context): Promise<RouteAction> => {
+        const { email }: any = ctx.request.body;
+        if (!(await this.authService.sendResetLink(ctx, email))) return;
+        ResponseService.res(ctx, ResponseCode.OK, 'Reset link has been sent');
+        return;
+    };
+
+    verifyResetPasswordCode = async (ctx: Context): Promise<RouteAction> => {
+        const { code, email }: any = ctx.request.body;
+        const verify = await this.authService.verifyResetCode(ctx, { code, email });
+        if (!verify) return;
+        ResponseService.res(ctx, ResponseCode.OK, 'Reset code is valid');
+        return;
+    };
+
+    changePassword = async (ctx: Context): Promise<RouteAction> => {
+        const { email, code, newPassword }: any = ctx.request.body;
+        const changed = await this.authService.updatePassword(ctx, { email, code, newPassword });
+        if (!changed) return;
+        ResponseService.res(ctx, ResponseCode.OK, 'Password has been updated');
+        return;
+    };
 }
 
-export const getAuthController = (app?: App) =>
-  new AuthController(
-    new AuthService(
-      new UserService(new UserRepository(app.dataSource)),
-      new NotificationService(),
-    ),
-  );
+export const getAuthController = (app?: App) => new AuthController(new AuthService(new UserService(new UserRepository(app.dataSource)), new NotificationService()));

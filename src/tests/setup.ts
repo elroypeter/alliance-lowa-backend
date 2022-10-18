@@ -4,51 +4,56 @@ import { IMemoryDb, newDb } from 'pg-mem';
 import { configService } from '../config';
 import { RegisteredEntities } from '../entity';
 
-let TestApp: App;
+export let TestApp: App;
 let TestDB: IMemoryDb;
 let TestDataSource: DataSource;
 
-export const TestAppInstance = async (): Promise<App> => {
-  TestDB = newDb({
-    autoCreateForeignKeyIndices: true,
-  });
+beforeAll(async () => {
+    TestApp = await TestAppInstance();
+});
 
-  TestDB.public.registerFunction({
-    implementation: () => 'test',
-    name: 'current_database',
-  });
+beforeEach(async () => {
+    jest.clearAllMocks();
+});
 
-  TestDB.public.registerFunction({
-    implementation: () => 'test',
-    name: 'version',
-  });
+afterAll(async () => {
+    await TestApp.koaServer.close();
+});
 
-  TestDB.public.interceptQueries((queryText) => {
-    if (
-      queryText.search(
-        /(pg_views|pg_matviews|pg_tables|pg_enum|columns.*|ALTER TABLE)/g,
-      ) > -1
-    ) {
-      return [];
-    }
-    return null;
-  });
+const TestAppInstance = async (): Promise<App> => {
+    TestDB = newDb({
+        autoCreateForeignKeyIndices: true,
+    });
 
-  TestDataSource = await TestDB.adapters.createTypeormDataSource({
-    type: 'postgres',
-    database: ':memory:',
-    dropSchema: true,
-    entities: RegisteredEntities,
-    synchronize: true,
-    logging: false,
-  });
+    TestDB.public.registerFunction({
+        implementation: () => 'test',
+        name: 'current_database',
+    });
 
-  TestDataSource = await TestDataSource.initialize();
+    TestDB.public.registerFunction({
+        implementation: () => 'test',
+        name: 'version',
+    });
 
-  TestApp = await new App(
-    configService(RegisteredEntities, '../env.test.yml'),
-    TestDataSource,
-  ).initApp({ enableKoaLogger: false });
+    TestDB.public.interceptQueries((queryText) => {
+        if (queryText.search(/(pg_views|pg_matviews|pg_tables|pg_enum|columns.*|ALTER TABLE)/g) > -1) {
+            return [];
+        }
+        return null;
+    });
 
-  return TestApp;
+    TestDataSource = await TestDB.adapters.createTypeormDataSource({
+        type: 'postgres',
+        database: ':memory:',
+        dropSchema: true,
+        entities: RegisteredEntities,
+        synchronize: true,
+        logging: false,
+    });
+
+    TestDataSource = await TestDataSource.initialize();
+
+    TestApp = await new App(configService(RegisteredEntities, '../env.test.yml'), TestDataSource).initApp({ enableKoaLogger: false });
+
+    return TestApp;
 };

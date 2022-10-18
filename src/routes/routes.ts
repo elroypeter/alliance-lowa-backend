@@ -8,24 +8,14 @@ import { message } from './message';
 import { App } from '../bootstrap';
 import { Route } from '../types/route.types';
 
-const routes = (app: App) => [
-  ...subscriber,
-  ...auth(app),
-  ...user,
-  ...imageSlider,
-  ...project,
-  ...message,
-];
+const routes = (app: App) => [...subscriber, ...auth(app), ...user, ...imageSlider, ...project, ...message];
 
 export const Routes = (router, app: App) => {
-  const config = (route: Route) => {
-    router[route.httpMethod](
-      route.path,
-      compose([...route.guards, route.action]),
-    );
-  };
+    const config = (route: Route) => {
+        router[route.httpMethod](route.path, compose([...route.guards, route.action]));
+    };
 
-  routes(app).forEach((route) => {
-    config(route);
-  });
+    routes(app).forEach((route) => {
+        config(route);
+    });
 };

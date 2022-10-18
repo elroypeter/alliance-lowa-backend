@@ -1,3 +1,3 @@
 export type AppConfig = {
-  enableKoaLogger: boolean;
+    enableKoaLogger: boolean;
 };
