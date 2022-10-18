@@ -10,9 +10,6 @@ export class ImageSliderEntity extends BaseEntity implements Translatable<IImage
     id: number;
 
     @Column({ length: 255 })
-    imageName: string;
-
-    @Column({ length: 255 })
     filePath: string;
 
     @OneToOne(() => PublishStatusEntity, (isPublished) => isPublished.status)

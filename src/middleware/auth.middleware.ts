@@ -26,8 +26,9 @@ export const authGuard: RouteGuard = async (ctx: Context, next: Next) => {
                 ctx.status = ResponseCode.BAD_REQUEST;
             }
         } catch (error) {
-            ctx.body = { message: 'Invalid Token' };
-            ctx.status = 401;
+            ctx.body = { message: 'Unknown error' };
+            ctx.status = ResponseCode.INTERNAL_SERVER_ERROR;
+            throw error;
         }
     }
 };

@@ -5,7 +5,8 @@ import { ImageSliderService } from '../services/ImageSlider.service';
 import { ResponseService } from '../services/Response.service';
 import { ImageSliderRepository } from '../repository/ImageSlider.repository';
 import { RouteAction } from '../types/route.types';
-import { IImageSlider } from '../interface/image-slider.interface';
+import { IImageSlider, IImageSliderDto } from '../interface/image-slider.interface';
+import { ImageSliderEntity } from '../entity/ImageSlider.entity';
 
 class ImageSliderController {
     imageSliderService: ImageSliderService;
@@ -17,6 +18,13 @@ class ImageSliderController {
     getImageSlider = async (ctx: Context): Promise<RouteAction> => {
         const imageSliders: IImageSlider[] = await this.imageSliderService.getImageSliders();
         ResponseService.res(ctx, ResponseCode.OK, imageSliders);
+        return;
+    };
+
+    saveImageSlider = async (ctx: Context): Promise<RouteAction> => {
+        const imageSliderDto: IImageSliderDto = ctx.request.body;
+        const images: ImageSliderEntity[] = await this.imageSliderService.saveImageSlider(imageSliderDto);
+        ResponseService.res(ctx, ResponseCode.CREATED, images);
         return;
     };
 }

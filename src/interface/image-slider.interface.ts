@@ -2,10 +2,16 @@ import { LocaleString } from '../locale/locale-types';
 
 export interface IImageSlider {
     filePath: string;
-    imageName: string;
     title: LocaleString;
     description: LocaleString;
     isPublished: IPublishStatus;
+}
+
+export interface IImageSliderDto {
+    langCode: string;
+    base64: string;
+    title: string;
+    description: string;
 }
 
 export interface IPublishStatus {
