@@ -9,7 +9,7 @@ export interface IImageSlider {
 
 export interface IImageSliderDto {
     langCode: string;
-    base64: string;
+    base64?: string;
     title: string;
     description: string;
 }

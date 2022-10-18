@@ -20,7 +20,6 @@ describe('Authentication Login', () => {
 
     it('unknown user fails to sign-in', async () => {
         const response = await Request(TestApp.koaInstance.callback()).post('/auth/login').send({ email: 'unknown@gmail.com', password: 'test' });
-
         expect(response.status).toEqual(ResponseCode.UNAUTHORIZED);
         expect(response.text).toEqual('User with email not found');
     });

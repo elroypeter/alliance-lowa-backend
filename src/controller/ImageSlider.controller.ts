@@ -27,6 +27,14 @@ class ImageSliderController {
         ResponseService.res(ctx, ResponseCode.CREATED, images);
         return;
     };
+
+    addImageTranslation = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const imageSliderDto: IImageSliderDto = ctx.request.body;
+        const image: ImageSliderEntity = await this.imageSliderService.addImageSliderTranslation(ctx, imageSliderDto, id);
+        ResponseService.res(ctx, ResponseCode.CREATED, image);
+        return;
+    };
 }
 
 export const getImageSliderController = (app?: App) => new ImageSliderController(new ImageSliderService(new ImageSliderRepository(app.dataSource)));

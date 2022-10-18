@@ -44,7 +44,6 @@ describe('Authentication ResetPassword', () => {
         await UserEntity.update({ email: 'test@gmail.com' }, { passwordResetCode: token });
 
         const response = await Request(TestApp.koaInstance.callback()).post('/auth/verify-password-code').send({ email: 'test@gmail.com', code: token });
-
         expect(response.status).toEqual(ResponseCode.BAD_REQUEST);
         expect(response.text).toEqual('Reset code is invalid or expired');
     });
@@ -54,7 +53,6 @@ describe('Authentication ResetPassword', () => {
         await UserEntity.update({ email: 'test@gmail.com' }, { passwordResetCode: token });
 
         const response = await Request(TestApp.koaInstance.callback()).post('/auth/verify-password-code').send({ email: 'test@gmail.com', code: undefined });
-
         expect(response.status).toEqual(ResponseCode.BAD_REQUEST);
         expect(response.text).toEqual('Reset code is invalid or expired');
     });
@@ -64,7 +62,6 @@ describe('Authentication ResetPassword', () => {
         await UserEntity.update({ email: 'test@gmail.com' }, { passwordResetCode: token });
 
         const response = await Request(TestApp.koaInstance.callback()).post('/auth/verify-password-code').send({ email: 'test@gmail.com', code: token });
-
         expect(response.status).toEqual(ResponseCode.OK);
         expect(response.text).toEqual('Reset code is valid');
     });

@@ -18,4 +18,11 @@ export const imageSlider = (app: App): Route[] => [
         action: getImageSliderController(app).saveImageSlider,
         guards: [authGuard],
     },
+    {
+        name: 'addImageTranslation',
+        path: '/api/image-slider/:id',
+        httpMethod: 'put',
+        action: getImageSliderController(app).addImageTranslation,
+        guards: [authGuard],
+    },
 ];
