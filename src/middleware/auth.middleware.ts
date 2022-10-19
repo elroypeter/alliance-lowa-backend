@@ -1,38 +1,34 @@
-import { Context, Next } from "koa";
-import { config } from "../config";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { Context, Next } from 'koa';
+import { JwtPayload } from 'jsonwebtoken';
+import { RouteGuard } from '../types/route.types';
+import { ResponseCode } from '../enums/response.enums';
+import { getTokenPayLoad, hasTokenExpired } from '../utils/hash.utils';
+import { IPublicUser, IUser } from '../interface/user.interface';
+import { UserEntity } from '../entity/User.entity';
+import { UserService } from '../services/User.service';
 
-export const authGuard = (ctx: Context, next: Next) => {
+export const authGuard: RouteGuard = async (ctx: Context, next: Next) => {
     const token = ctx.request.headers.token;
 
     if (!token) {
-        ctx.status = 400;
-        ctx.message = "missing token";
-        ctx.body = { message: "token is required for authentication" };
-        return;
+        ctx.body = 'token is required for authentication';
+        ctx.status = ResponseCode.BAD_REQUEST;
     } else {
         try {
-            const payload: string | JwtPayload = verify(
-                String(token),
-                config.jwt_secret
-            );
+            const payload: string | JwtPayload = getTokenPayLoad(String(token));
+            const user: Pick<IUser, IPublicUser> = UserService.publiclyAccessibleUser(await UserEntity.findOneBy({ id: payload['userId'] }));
 
-            // check if token has expired
-            const dateNow = new Date();
-
-            if (payload["exp"] * 1000 > dateNow.getTime()) {
-                return next();
+            if (!hasTokenExpired(payload['exp'])) {
+                ctx.set('user', JSON.stringify(user));
+                await next();
             } else {
-                ctx.status = 400;
-                ctx.message = "token has expired";
-                ctx.body = { message: "expired" };
-                return;
+                ctx.body = { message: 'token has expired' };
+                ctx.status = ResponseCode.BAD_REQUEST;
             }
         } catch (error) {
-            ctx.status = 401;
-            ctx.message = "Unauthorized";
-            ctx.body = { message: "Invalid Token" };
-            return;
+            ctx.body = { message: 'Unknown error' };
+            ctx.status = ResponseCode.INTERNAL_SERVER_ERROR;
+            throw error;
         }
     }
 };

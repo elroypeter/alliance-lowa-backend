@@ -1,30 +1,21 @@
-import * as compose from "koa-compose";
+import * as compose from 'koa-compose';
+import { subscriber } from './subscriber';
+import { auth } from './auth';
+import { user } from './user';
+import { imageSlider } from './imageSlider';
+import { project } from './project';
+import { message } from './message';
+import { App } from '../bootstrap';
+import { Route } from '../types/route.types';
 
-import { subscriber } from "./subscriber";
-import { auth } from "./auth";
-import { user } from "./user";
-import { imageSlider } from "./imageSlider";
-import { project } from "./project";
-import { message } from "./message";
+const routes = (app: App) => [...subscriber, ...auth(app), ...user, ...imageSlider(app), ...project, ...message];
 
-const routes = [
-    ...subscriber,
-    ...auth,
-    ...user,
-    ...imageSlider,
-    ...project,
-    ...message,
-];
-
-export const Routes = (router) => {
-    const config = (route) => {
-        router[route["@httpMethod"]](
-            route["@path"],
-            compose([...route["@guards"], route["@action"]])
-        );
+export const Routes = (router, app: App) => {
+    const config = (route: Route) => {
+        router[route.httpMethod](route.path, compose([...route.guards, route.action]));
     };
 
-    routes.forEach((route) => {
+    routes(app).forEach((route) => {
         config(route);
     });
 };
