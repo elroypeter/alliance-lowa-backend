@@ -79,7 +79,7 @@ describe('ImageSider', () => {
             description: 'Show activity on this post',
         };
         const response = await Request(TestApp.koaInstance.callback())
-            .put(`/api/image-slider/${selectedImage.id}`)
+            .post(`/api/image-slider/translation/${selectedImage.id}`)
             .set('token', token)
             .send(newTranslation);
         expect(response.status).toEqual(ResponseCode.CREATED);
@@ -87,11 +87,35 @@ describe('ImageSider', () => {
         expect(response.body.translations.length).toBeGreaterThan(1);
     });
 
+    it('update image slider translation', async () => {
+        const updateTranslation = {
+            title: 'Updated Alliance Lowa',
+            description: 'Show activity on this post',
+        };
+
+        const response = await Request(TestApp.koaInstance.callback())
+            .put(`/api/image-slider/translation/${selectedImage.translations[0].id}`)
+            .set('token', token)
+            .send(updateTranslation);
+        expect(response.status).toEqual(ResponseCode.CREATED);
+        const updatedImageTranslation = await ImageSliderTranslationEntity.findOne({ where: { id: response.body.id } });
+        expect(updatedImageTranslation.title).toEqual('Updated Alliance Lowa');
+    });
+
+    it('publish image slider', async () => {
+        const response = await Request(TestApp.koaInstance.callback()).put(`/api/image-slider/publish/${selectedImage.id}`).set('token', token).send({
+            status: true,
+        });
+        expect(response.status).toEqual(ResponseCode.CREATED);
+        expect(response.body).toBeDefined();
+        const publishedImage = await ImageSliderEntity.findOne({ where: { id: response.body.id }, relations: ['isPublished'] });
+        expect(publishedImage.isPublished.status).toBeTruthy();
+    });
+
     it('delete image slider', async () => {
         const response = await Request(TestApp.koaInstance.callback()).delete(`/api/image-slider/${selectedImage.id}`).set('token', token);
         expect(response.status).toEqual(ResponseCode.CREATED);
         expect(response.body).toBeDefined();
-
         const deletedImage = await ImageSliderEntity.findOne({ where: { id: response.body.id } });
         expect(deletedImage).toBeNull();
     });

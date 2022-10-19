@@ -47,9 +47,9 @@ class ImageSliderController {
     };
 
     changePublishStatus = async (ctx: Context): Promise<RouteAction> => {
-        const { status } = ctx.request.query;
+        const { status } = ctx.request.body;
         const id: number = parseInt(ctx.params.id);
-        const image: ImageSliderEntity = await this.imageSliderService.changePublishStatus(ctx, !!status, id);
+        const image: ImageSliderEntity = await this.imageSliderService.changePublishStatus(ctx, status, id);
         ResponseService.res(ctx, ResponseCode.CREATED, image);
         return;
     };
