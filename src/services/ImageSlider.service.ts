@@ -3,6 +3,7 @@ import { ResponseCode } from '../enums/response.enums';
 import { ImageSliderEntity } from '../entity/ImageSlider.entity';
 import { ImageSliderTranslationEntity } from '../entity/ImageSliderTranslation.Entity';
 import { IImageSlider, IImageSliderDto } from '../interface/image-slider.interface';
+import { PublishStatusEntity } from '../entity/Publish.entity';
 import { ImageSliderRepository } from '../repository/ImageSlider.repository';
 import { CreateFile } from './ManageFile.service';
 import { ResponseService } from './Response.service';
@@ -14,8 +15,8 @@ export class ImageSliderService {
         this.imageSlideRepository = imageSlideRepository;
     }
 
-    async getImageSliders(langCode?: string): Promise<IImageSlider[]> {
-        return await this.imageSlideRepository.findLocaleImageSlide(langCode);
+    async getImageSliders(langCode?: string, isPulished?: boolean): Promise<IImageSlider[]> {
+        return await this.imageSlideRepository.findLocaleImageSlide(langCode, isPulished);
     }
 
     async saveImageSlider(imageSliderDto: IImageSliderDto): Promise<ImageSliderEntity[]> {
@@ -25,19 +26,20 @@ export class ImageSliderService {
         imageSliderTranslationEntity.description = imageSliderDto.description;
         await imageSliderTranslationEntity.save();
 
+        const publishStatusEntity: PublishStatusEntity = new PublishStatusEntity();
+        publishStatusEntity.entity = 'ImageSliderEntity';
+        publishStatusEntity.status = false;
+        await publishStatusEntity.save();
+
         const fileData = await CreateFile(imageSliderDto.base64);
         const imageSliderEntity: ImageSliderEntity = new ImageSliderEntity();
 
-        if (imageSliderEntity.translations) {
-            imageSliderEntity.translations.push(imageSliderTranslationEntity);
-        } else {
-            imageSliderEntity.translations = [imageSliderTranslationEntity];
-        }
-
+        imageSliderEntity.translations = [imageSliderTranslationEntity];
+        imageSliderEntity.isPublished = publishStatusEntity;
         imageSliderEntity.filePath = fileData.filePath;
         await imageSliderEntity.save();
 
-        return await ImageSliderEntity.find();
+        return await ImageSliderEntity.find({ relations: ['isPublished', 'translations'] });
     }
 
     async addImageSliderTranslation(ctx: Context, imageSliderDto: IImageSliderDto, id: number): Promise<ImageSliderEntity> {
@@ -55,6 +57,39 @@ export class ImageSliderService {
 
         imageSliderEntity.translations.push(imageSliderTranslationEntity);
         await imageSliderEntity.save();
+        return imageSliderEntity;
+    }
+
+    async updateImageSliderTranslation(ctx: Context, imageSliderDto: IImageSliderDto, id: number): Promise<ImageSliderTranslationEntity> {
+        const imageSliderTranslationEntity: ImageSliderTranslationEntity = await ImageSliderTranslationEntity.findOne({ where: { id } });
+        if (!imageSliderTranslationEntity) {
+            ResponseService.throwReponseException(ctx, 'Imageslider Translation with id not found', ResponseCode.BAD_REQUEST);
+            return imageSliderTranslationEntity;
+        }
+        imageSliderTranslationEntity.title = imageSliderDto.title;
+        imageSliderTranslationEntity.langCode = imageSliderDto.langCode;
+        imageSliderTranslationEntity.description = imageSliderDto.description;
+        await imageSliderTranslationEntity.save();
+        return imageSliderTranslationEntity;
+    }
+
+    async changePublishStatus(ctx: Context, status: boolean, id: number): Promise<ImageSliderEntity> {
+        const imageSliderEntity: ImageSliderEntity = await ImageSliderEntity.findOne({ where: { id }, relations: ['isPublished'] });
+        if (!imageSliderEntity) {
+            ResponseService.throwReponseException(ctx, 'Imageslider with id not found', ResponseCode.BAD_REQUEST);
+            return imageSliderEntity;
+        }
+        imageSliderEntity.isPublished.status = status;
+        await imageSliderEntity.save();
+    }
+
+    async deleteImageSlider(ctx: Context, id: number): Promise<ImageSliderEntity> {
+        const imageSliderEntity: ImageSliderEntity = await ImageSliderEntity.findOne({ where: { id } });
+        if (!imageSliderEntity) {
+            ResponseService.throwReponseException(ctx, 'Imageslider with id not found', ResponseCode.BAD_REQUEST);
+            return imageSliderEntity;
+        }
+        await ImageSliderEntity.delete(imageSliderEntity.id);
         return imageSliderEntity;
     }
 }

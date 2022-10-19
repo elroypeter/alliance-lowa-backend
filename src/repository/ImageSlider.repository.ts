@@ -8,13 +8,24 @@ export class ImageSliderRepository extends Repository<ImageSliderEntity> {
         super(ImageSliderEntity, dataSource.createEntityManager());
     }
 
-    async findLocaleImageSlide(langCode: string): Promise<IImageSlider[]> {
+    async findLocaleImageSlide(langCode: string | undefined, pubStatus: boolean): Promise<IImageSlider[]> {
+        if (pubStatus) {
+            return this.translateImageSlide(
+                await this.getImageSliderQuery(langCode)
+                    .leftJoinAndSelect('imageSlider.isPublished', 'publishStatus')
+                    .andWhere('publishStatus.status = :pubStatus', { pubStatus })
+                    .getMany(),
+            );
+        }
         return this.translateImageSlide(await this.getImageSliderQuery(langCode).getMany());
     }
 
-    private getImageSliderQuery(langCode: string): SelectQueryBuilder<ImageSliderEntity> {
-        const code = langCode || 'en';
-        return this.manager.createQueryBuilder(ImageSliderEntity, 'image_slider').leftJoinAndSelect('image_slider.translations', 'image_translation').where('image_translation.langCode = :code', { code });
+    private getImageSliderQuery(langCode: string | undefined): SelectQueryBuilder<ImageSliderEntity> {
+        const code = langCode && 'en';
+        return this.manager
+            .createQueryBuilder(ImageSliderEntity, 'imageSlider')
+            .leftJoinAndSelect('imageSlider.translations', 'imageTranslation')
+            .where('imageTranslation.langCode = :code', { code });
     }
 
     private translateImageSlide(result: ImageSliderEntity[]): IImageSlider[] {

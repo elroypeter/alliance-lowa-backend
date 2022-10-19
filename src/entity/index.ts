@@ -11,4 +11,17 @@ import { ProjectAttachmentEntity } from './ProjectAttachment.entity';
 import { ProjectTranslationEntity } from './ProjectTranslationEntity';
 import { PublishStatusEntity } from './Publish.entity';
 
-export const RegisteredEntities = [SubscriberEntity, UserEntity, ImageSliderEntity, ProjectEntity, ContactMessageEntity, BlogNewsEntity, BlogNewsTranslationEntity, CareerEntity, ImageSliderTranslationEntity, ProjectAttachmentEntity, ProjectTranslationEntity, PublishStatusEntity];
+export const RegisteredEntities = [
+    SubscriberEntity,
+    UserEntity,
+    ImageSliderEntity,
+    ProjectEntity,
+    ContactMessageEntity,
+    BlogNewsEntity,
+    BlogNewsTranslationEntity,
+    CareerEntity,
+    ImageSliderTranslationEntity,
+    ProjectAttachmentEntity,
+    ProjectTranslationEntity,
+    PublishStatusEntity,
+];

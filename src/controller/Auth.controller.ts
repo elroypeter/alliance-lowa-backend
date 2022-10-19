@@ -46,4 +46,5 @@ class AuthController {
     };
 }
 
-export const getAuthController = (app?: App) => new AuthController(new AuthService(new UserService(new UserRepository(app.dataSource)), new NotificationService()));
+export const getAuthController = (app?: App) =>
+    new AuthController(new AuthService(new UserService(new UserRepository(app.dataSource)), new NotificationService()));

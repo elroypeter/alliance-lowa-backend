@@ -4,6 +4,8 @@ import { TestApp } from '../setup';
 import { ResponseCode } from '../../enums/response.enums';
 import { UserEntity } from '../../entity/User.entity';
 import { DeleteFile } from '../../services/ManageFile.service';
+import { ImageSliderEntity } from '../../entity/ImageSlider.entity';
+import { ImageSliderTranslationEntity } from '../../entity/ImageSliderTranslation.Entity';
 
 describe('ImageSider', () => {
     let token;
@@ -52,7 +54,22 @@ describe('ImageSider', () => {
         expect(response.body).toBeInstanceOf(Array);
         expect(response.body.length).toBeGreaterThan(0);
         selectedImage = response.body[0];
+        expect(selectedImage.isPublished.status).toBeFalsy();
         await DeleteFile(selectedImage.filePath);
+    });
+
+    it('access image sliders with isPublished query', async () => {
+        const response = await Request(TestApp.koaInstance.callback()).get('/api/image-slider').query({ isPublished: true }).set('token', token);
+        expect(response.status).toEqual(ResponseCode.OK);
+        expect(response.body).toBeInstanceOf(Array);
+        expect(response.body.length).toEqual(0);
+    });
+
+    it('access image sliders with query', async () => {
+        const response = await Request(TestApp.koaInstance.callback()).get('/api/image-slider').query({ isPublished: false }).set('token', token);
+        expect(response.status).toEqual(ResponseCode.OK);
+        expect(response.body).toBeInstanceOf(Array);
+        expect(response.body.length).toEqual(1);
     });
 
     it('add image slider translation', async () => {
@@ -61,9 +78,21 @@ describe('ImageSider', () => {
             title: 'Alliance Lowa',
             description: 'Show activity on this post',
         };
-        const response = await Request(TestApp.koaInstance.callback()).put(`/api/image-slider/${selectedImage.id}`).set('token', token).send(newTranslation);
+        const response = await Request(TestApp.koaInstance.callback())
+            .put(`/api/image-slider/${selectedImage.id}`)
+            .set('token', token)
+            .send(newTranslation);
         expect(response.status).toEqual(ResponseCode.CREATED);
         expect(response.body.translations).toBeInstanceOf(Array);
         expect(response.body.translations.length).toBeGreaterThan(1);
+    });
+
+    it('delete image slider', async () => {
+        const response = await Request(TestApp.koaInstance.callback()).delete(`/api/image-slider/${selectedImage.id}`).set('token', token);
+        expect(response.status).toEqual(ResponseCode.CREATED);
+        expect(response.body).toBeDefined();
+
+        const deletedImage = await ImageSliderEntity.findOne({ where: { id: response.body.id } });
+        expect(deletedImage).toBeNull();
     });
 });

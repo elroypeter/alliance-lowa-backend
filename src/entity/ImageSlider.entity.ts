@@ -4,7 +4,7 @@ import { IImageSlider } from '../interface/image-slider.interface';
 import { ImageSliderTranslationEntity } from './ImageSliderTranslation.Entity';
 import { PublishStatusEntity } from './Publish.entity';
 
-@Entity()
+@Entity('image-slider')
 export class ImageSliderEntity extends BaseEntity implements Translatable<IImageSlider> {
     @PrimaryGeneratedColumn()
     id: number;

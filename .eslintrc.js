@@ -34,7 +34,7 @@ module.exports = {
             {
                 singleQuote: true,
                 trailingComma: 'all',
-                printWidth: 2000,
+                printWidth: 150,
                 tabWidth: 4,
             },
         ],

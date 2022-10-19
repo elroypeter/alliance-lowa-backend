@@ -65,11 +65,15 @@ describe('Authentication ResetPassword', () => {
         expect(response.text).toEqual('Password has been updated');
 
         // can login with new password
-        const successLoginResponse = await Request(TestApp.koaInstance.callback()).post('/auth/login').send({ email: 'test@gmail.com', password: 'newtest' });
+        const successLoginResponse = await Request(TestApp.koaInstance.callback())
+            .post('/auth/login')
+            .send({ email: 'test@gmail.com', password: 'newtest' });
         expect(successLoginResponse.status).toEqual(ResponseCode.OK);
 
         // cannot login with old password
-        const failureLoginResponse = await Request(TestApp.koaInstance.callback()).post('/auth/login').send({ email: 'test@gmail.com', password: 'test' });
+        const failureLoginResponse = await Request(TestApp.koaInstance.callback())
+            .post('/auth/login')
+            .send({ email: 'test@gmail.com', password: 'test' });
         expect(failureLoginResponse.status).toEqual(ResponseCode.UNAUTHORIZED);
         expect(failureLoginResponse.text).toEqual('Invalid user password');
     });

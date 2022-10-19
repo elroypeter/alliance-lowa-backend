@@ -17,6 +17,6 @@ export class ImageSliderTranslationEntity extends BaseEntity implements Translat
     @Column({ type: 'text' })
     description: string;
 
-    @ManyToOne(() => ImageSliderEntity, (slider) => slider.translations)
+    @ManyToOne(() => ImageSliderEntity, (slider) => slider.translations, { onDelete: 'CASCADE' })
     base: ImageSliderEntity;
 }
