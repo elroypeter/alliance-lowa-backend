@@ -12,6 +12,13 @@ export const imageSlider = (app: App): Route[] => [
         guards: [authGuard],
     },
     {
+        name: 'getPublicImageSlider',
+        path: '/api/image-slider/public',
+        httpMethod: 'get',
+        action: getImageSliderController(app).getImageSlider,
+        guards: [],
+    },
+    {
         name: 'saveImageSlider',
         path: '/api/image-slider',
         httpMethod: 'post',
@@ -20,16 +27,30 @@ export const imageSlider = (app: App): Route[] => [
     },
     {
         name: 'addImageTranslation',
-        path: '/api/image-slider/:id',
-        httpMethod: 'put',
+        path: '/api/image-slider/translation/:id',
+        httpMethod: 'post',
         action: getImageSliderController(app).addImageTranslation,
         guards: [authGuard],
     },
     {
         name: 'addImageTranslation',
+        path: '/api/image-slider/translation/:id',
+        httpMethod: 'put',
+        action: getImageSliderController(app).updateImageTranslation,
+        guards: [authGuard],
+    },
+    {
+        name: 'deleteImageSlider',
         path: '/api/image-slider/:id',
         httpMethod: 'delete',
         action: getImageSliderController(app).deleteImageSlider,
+        guards: [authGuard],
+    },
+    {
+        name: 'publishImageSlider',
+        path: '/api/image-slider/publish/:id',
+        httpMethod: 'put',
+        action: getImageSliderController(app).changePublishStatus,
         guards: [authGuard],
     },
 ];

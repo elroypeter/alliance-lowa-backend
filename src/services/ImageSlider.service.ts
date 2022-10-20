@@ -15,7 +15,7 @@ export class ImageSliderService {
         this.imageSlideRepository = imageSlideRepository;
     }
 
-    async getImageSliders(langCode?: string, isPulished?: boolean): Promise<IImageSlider[]> {
+    async getImageSliders(langCode?: string | undefined, isPulished?: boolean): Promise<IImageSlider[]> {
         return await this.imageSlideRepository.findLocaleImageSlide(langCode, isPulished);
     }
 
@@ -66,10 +66,8 @@ export class ImageSliderService {
             ResponseService.throwReponseException(ctx, 'Imageslider Translation with id not found', ResponseCode.BAD_REQUEST);
             return imageSliderTranslationEntity;
         }
-        imageSliderTranslationEntity.title = imageSliderDto.title;
-        imageSliderTranslationEntity.langCode = imageSliderDto.langCode;
-        imageSliderTranslationEntity.description = imageSliderDto.description;
-        await imageSliderTranslationEntity.save();
+
+        await ImageSliderTranslationEntity.getRepository().update({ id: imageSliderTranslationEntity.id }, { ...imageSliderDto });
         return imageSliderTranslationEntity;
     }
 
@@ -79,8 +77,8 @@ export class ImageSliderService {
             ResponseService.throwReponseException(ctx, 'Imageslider with id not found', ResponseCode.BAD_REQUEST);
             return imageSliderEntity;
         }
-        imageSliderEntity.isPublished.status = status;
-        await imageSliderEntity.save();
+        await PublishStatusEntity.getRepository().update({ id: imageSliderEntity.isPublished.id }, { status });
+        return imageSliderEntity;
     }
 
     async deleteImageSlider(ctx: Context, id: number): Promise<ImageSliderEntity> {

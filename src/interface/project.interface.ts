@@ -9,6 +9,13 @@ export interface IProject {
     isPublished: IPublishStatus;
 }
 
+export interface IProjectDto {
+    slug?: string;
+    langCode: string;
+    title: LocaleString;
+    description: LocaleString;
+}
+
 export interface IProjectAttachment {
     altText: string;
     filePath: string;

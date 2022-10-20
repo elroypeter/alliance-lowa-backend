@@ -12,9 +12,7 @@ export function translate<T>(translatable: Translatable<T>): T {
     delete translated.translations;
 
     for (const [key, value] of Object.entries(translation)) {
-        if (key !== 'langCode' && key !== 'id') {
-            translated[key] = value;
-        }
+        translated[key] = value;
     }
 
     return translated;

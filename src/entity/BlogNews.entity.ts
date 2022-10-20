@@ -10,9 +10,6 @@ export class BlogNewsEntity extends BaseEntity implements Translatable<IBlogNews
     id: number;
 
     @Column({ length: 255 })
-    imageName: string;
-
-    @Column({ length: 255 })
     filePath: string;
 
     @OneToOne(() => PublishStatusEntity, (isPublished) => isPublished.status)

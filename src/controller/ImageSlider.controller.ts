@@ -7,7 +7,7 @@ import { ImageSliderRepository } from '../repository/ImageSlider.repository';
 import { RouteAction } from '../types/route.types';
 import { IImageSlider, IImageSliderDto } from '../interface/image-slider.interface';
 import { ImageSliderEntity } from '../entity/ImageSlider.entity';
-import { ImageSliderTranslationEntity } from 'src/entity/ImageSliderTranslation.Entity';
+import { ImageSliderTranslationEntity } from '../entity/ImageSliderTranslation.Entity';
 
 class ImageSliderController {
     imageSliderService: ImageSliderService;
@@ -17,8 +17,8 @@ class ImageSliderController {
     }
 
     getImageSlider = async (ctx: Context): Promise<RouteAction> => {
-        const { langCode, isPublished } = ctx.request.query;
-        const imageSliders: IImageSlider[] = await this.imageSliderService.getImageSliders(String(langCode), isPublished === 'true' ? true : false);
+        const { langCode, isPublished } = ctx.request.query as { [x: string]: string & undefined };
+        const imageSliders: IImageSlider[] = await this.imageSliderService.getImageSliders(langCode, isPublished === 'true' ? true : false);
         ResponseService.res(ctx, ResponseCode.OK, imageSliders);
         return;
     };
@@ -47,17 +47,17 @@ class ImageSliderController {
     };
 
     changePublishStatus = async (ctx: Context): Promise<RouteAction> => {
-        const { status } = ctx.request.query;
+        const { status } = ctx.request.body;
         const id: number = parseInt(ctx.params.id);
-        const image: ImageSliderEntity = await this.imageSliderService.changePublishStatus(ctx, !!status, id);
-        ResponseService.res(ctx, ResponseCode.CREATED, image);
+        const image: ImageSliderEntity = await this.imageSliderService.changePublishStatus(ctx, status, id);
+        ResponseService.res(ctx, ResponseCode.ACCEPTED, image);
         return;
     };
 
     deleteImageSlider = async (ctx: Context): Promise<RouteAction> => {
         const id: number = parseInt(ctx.params.id);
         const image: ImageSliderEntity = await this.imageSliderService.deleteImageSlider(ctx, id);
-        ResponseService.res(ctx, ResponseCode.CREATED, image);
+        ResponseService.res(ctx, ResponseCode.ACCEPTED, image);
         return;
     };
 }
