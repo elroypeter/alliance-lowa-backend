@@ -15,7 +15,7 @@ export class ImageSliderService {
         this.imageSlideRepository = imageSlideRepository;
     }
 
-    async getImageSliders(langCode?: string, isPulished?: boolean): Promise<IImageSlider[]> {
+    async getImageSliders(langCode?: string | undefined, isPulished?: boolean): Promise<IImageSlider[]> {
         return await this.imageSlideRepository.findLocaleImageSlide(langCode, isPulished);
     }
 
