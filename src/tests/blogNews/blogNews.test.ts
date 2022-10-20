@@ -42,7 +42,7 @@ describe('Blog News test', () => {
     });
 
     it('access public of blog news list', async () => {
-        const response = await Request(TestApp.koaInstance.callback()).get('/api/blog-news/public');
+        const response = await Request(TestApp.koaInstance.callback()).get('/api/public/blog-news');
         expect(response.status).toEqual(ResponseCode.OK);
         expect(response.body).toBeInstanceOf(Array);
     });
@@ -65,15 +65,15 @@ describe('Blog News test', () => {
     });
 
     it('access private of blog news single', async () => {
-        const response = await Request(TestApp.koaInstance.callback()).get(`/api/blog-news/${selectedBlog.body[0].id}`).set('token', token);
+        const response = await Request(TestApp.koaInstance.callback()).get(`/api/blog-news/${selectedBlog.id}`).set('token', token);
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body.id).toEqual(selectedBlog.body[0].id);
+        expect(response.body.id).toEqual(selectedBlog.id);
     });
 
     it('access public of blog news single', async () => {
-        const response = await Request(TestApp.koaInstance.callback()).get(`/api/blog-news/public/${selectedBlog.body[0].id}`);
+        const response = await Request(TestApp.koaInstance.callback()).get(`/api/public/blog-news/${selectedBlog.id}`);
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body.id).toEqual(selectedBlog.body[0].id);
+        expect(response.body.id).toEqual(selectedBlog.id);
     });
 
     it('access blog news with true isPublished query', async () => {

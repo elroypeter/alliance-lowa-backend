@@ -38,31 +38,32 @@ describe('Careers tests', () => {
         const savedCareer = await CareerEntity.find();
         expect(savedCareer).toBeInstanceOf(Array);
         expect(savedCareer.length).toBeGreaterThan(0);
-        expect(savedCareer[0].title).toEqual('New Job');
+        expect(savedCareer[0].slug).toEqual('new-job');
     });
 
     it('fetch all careers', async () => {
-        const savedCareers = await Request(TestApp.koaInstance.callback()).get('/api/careers').set('token', token);
-        expect(savedCareers.status).toEqual(ResponseCode.OK);
-        expect(savedCareers.body).toBeInstanceOf(Array);
+        const response = await Request(TestApp.koaInstance.callback()).get('/api/careers').set('token', token);
+        savedCareers = response.body[0];
+        expect(response.status).toEqual(ResponseCode.OK);
+        expect(response.body).toBeInstanceOf(Array);
     });
 
     it('fetch all careers public', async () => {
-        const savedCareers = await Request(TestApp.koaInstance.callback()).get('/api/careers/public');
-        expect(savedCareers.status).toEqual(ResponseCode.OK);
-        expect(savedCareers.body).toBeInstanceOf(Array);
+        const response = await Request(TestApp.koaInstance.callback()).get('/api/public/careers');
+        expect(response.status).toEqual(ResponseCode.OK);
+        expect(response.body).toBeInstanceOf(Array);
     });
 
     it('fetch single career', async () => {
-        const response = await Request(TestApp.koaInstance.callback()).get(`/api/careers/${savedCareers.body[0].id}`).set('token', token);
+        const response = await Request(TestApp.koaInstance.callback()).get(`/api/careers/${savedCareers.id}`).set('token', token);
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body.id).toEqual(savedCareers.body[0].id);
+        expect(response.body.id).toEqual(savedCareers.id);
     });
 
     it('fetch single career public', async () => {
-        const response = await Request(TestApp.koaInstance.callback()).get(`/api/careers/public/${savedCareers.body[0].id}`);
+        const response = await Request(TestApp.koaInstance.callback()).get(`/api/public/careers/${savedCareers.id}`);
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body.id).toEqual(savedCareers.body[0].id);
+        expect(response.body.id).toEqual(savedCareers.id);
     });
 
     it('update career', async () => {
@@ -71,18 +72,14 @@ describe('Careers tests', () => {
             description: 'testing new jobs',
         };
 
-        const response = await Request(TestApp.koaInstance.callback())
-            .put(`/api/careers/${savedCareers.body[0].id}`)
-            .set('token', token)
-            .send(updateCareer);
-
+        const response = await Request(TestApp.koaInstance.callback()).put(`/api/careers/${savedCareers.id}`).set('token', token).send(updateCareer);
         expect(response.status).toEqual(ResponseCode.ACCEPTED);
-        const savedCareer = await CareerEntity.findOne({ where: { id: savedCareers.body[0].id } });
-        expect(savedCareer[0].title).toEqual('Update Job');
+        const career = await CareerEntity.findOne({ where: { id: savedCareers.id } });
+        expect(career.title).toEqual('Update Job');
     });
 
     it('delete career', async () => {
-        const response = await Request(TestApp.koaInstance.callback()).delete(`/api/careers/${savedCareers.body[0].id}`).set('token', token);
+        const response = await Request(TestApp.koaInstance.callback()).delete(`/api/careers/${savedCareers.id}`).set('token', token);
         expect(response.status).toEqual(ResponseCode.ACCEPTED);
         expect(response.body).toBeDefined();
         const deletedCareer = await CareerEntity.findOne({ where: { id: response.body.id } });
