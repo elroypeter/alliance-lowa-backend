@@ -12,6 +12,13 @@ export const imageSlider = (app: App): Route[] => [
         guards: [authGuard],
     },
     {
+        name: 'getPublicImageSlider',
+        path: '/api/image-slider/public',
+        httpMethod: 'get',
+        action: getImageSliderController(app).getImageSlider,
+        guards: [],
+    },
+    {
         name: 'saveImageSlider',
         path: '/api/image-slider',
         httpMethod: 'post',

@@ -13,6 +13,7 @@ export class ImageSliderRepository extends Repository<ImageSliderEntity> {
             return this.translateImageSlide(
                 await this.getImageSliderQuery(langCode)
                     .leftJoinAndSelect('imageSlider.isPublished', 'publishStatus')
+                    .andWhere('publishStatus.entity = :entityI', { entityI: 'ImageSliderEntity' })
                     .andWhere('publishStatus.status = :pubStatus', { pubStatus })
                     .getMany(),
             );
@@ -21,7 +22,7 @@ export class ImageSliderRepository extends Repository<ImageSliderEntity> {
     }
 
     private getImageSliderQuery(langCode: string | undefined): SelectQueryBuilder<ImageSliderEntity> {
-        const code = langCode && 'en';
+        const code = langCode || 'en';
         return this.manager
             .createQueryBuilder(ImageSliderEntity, 'imageSlider')
             .leftJoinAndSelect('imageSlider.translations', 'imageTranslation')
