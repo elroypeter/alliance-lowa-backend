@@ -7,7 +7,7 @@ import { DeleteFile } from '../../services/ManageFile.service';
 import { ImageSliderEntity } from '../../entity/ImageSlider.entity';
 import { ImageSliderTranslationEntity } from '../../entity/ImageSliderTranslation.Entity';
 
-describe('ImageSider', () => {
+describe('ImageSider test', () => {
     let token;
     let selectedImage;
 
@@ -44,8 +44,8 @@ describe('ImageSider', () => {
     it('save image slider', async () => {
         const newImageSlider = {
             langCode: 'en',
-            title: 'Alliance Lowa',
-            description: 'Show activity on this post',
+            title: 'en Alliance Lowa',
+            description: 'en Show activity on this post',
             base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII',
         };
 
@@ -65,6 +65,13 @@ describe('ImageSider', () => {
         expect(response.body.length).toEqual(0);
     });
 
+    it('access public endpoint image sliders with isPublished query', async () => {
+        const response = await Request(TestApp.koaInstance.callback()).get('/api/image-slider/public').query({ isPublished: true });
+        expect(response.status).toEqual(ResponseCode.OK);
+        expect(response.body).toBeInstanceOf(Array);
+        expect(response.body.length).toEqual(0);
+    });
+
     it('access image sliders with query', async () => {
         const response = await Request(TestApp.koaInstance.callback()).get('/api/image-slider').query({ isPublished: false }).set('token', token);
         expect(response.status).toEqual(ResponseCode.OK);
@@ -75,8 +82,8 @@ describe('ImageSider', () => {
     it('add image slider translation', async () => {
         const newTranslation = {
             langCode: 'de',
-            title: 'Alliance Lowa',
-            description: 'Show activity on this post',
+            title: 'de Alliance Lowa',
+            description: 'de Show activity on this post',
         };
         const response = await Request(TestApp.koaInstance.callback())
             .post(`/api/image-slider/translation/${selectedImage.id}`)
@@ -85,6 +92,13 @@ describe('ImageSider', () => {
         expect(response.status).toEqual(ResponseCode.CREATED);
         expect(response.body.translations).toBeInstanceOf(Array);
         expect(response.body.translations.length).toBeGreaterThan(1);
+    });
+
+    it('access public endpoint image sliders with isPublished query', async () => {
+        const response = await Request(TestApp.koaInstance.callback()).get('/api/image-slider/public').query({ langCode: 'de' });
+        expect(response.status).toEqual(ResponseCode.OK);
+        expect(response.body).toBeInstanceOf(Array);
+        expect(response.body[0].title).toEqual('de Alliance Lowa');
     });
 
     it('update image slider translation', async () => {
@@ -106,7 +120,7 @@ describe('ImageSider', () => {
         const response = await Request(TestApp.koaInstance.callback()).put(`/api/image-slider/publish/${selectedImage.id}`).set('token', token).send({
             status: true,
         });
-        expect(response.status).toEqual(ResponseCode.CREATED);
+        expect(response.status).toEqual(ResponseCode.ACCEPTED);
         expect(response.body).toBeDefined();
         const publishedImage = await ImageSliderEntity.findOne({ where: { id: response.body.id }, relations: ['isPublished'] });
         expect(publishedImage.isPublished.status).toBeTruthy();
@@ -114,7 +128,7 @@ describe('ImageSider', () => {
 
     it('delete image slider', async () => {
         const response = await Request(TestApp.koaInstance.callback()).delete(`/api/image-slider/${selectedImage.id}`).set('token', token);
-        expect(response.status).toEqual(ResponseCode.CREATED);
+        expect(response.status).toEqual(ResponseCode.ACCEPTED);
         expect(response.body).toBeDefined();
         const deletedImage = await ImageSliderEntity.findOne({ where: { id: response.body.id } });
         expect(deletedImage).toBeNull();
