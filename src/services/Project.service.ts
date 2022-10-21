@@ -1,12 +1,14 @@
 import { ProjectEntity } from '../entity/Project.entity';
 import { ProjectTranslationEntity } from '../entity/ProjectTranslationEntity';
 import { PublishStatusEntity } from '../entity/Publish.entity';
-import { IProject, IProjectDto } from '../interface/project.interface';
+import { IProject, IProjectAttachmentDto, IProjectDto } from '../interface/project.interface';
 import { ProjectRepository } from '../repository/Project.repository';
 import slugify from 'slugify';
 import { Context } from 'koa';
 import { ResponseCode } from '../enums/response.enums';
 import { ResponseService } from './Response.service';
+import { ProjectAttachmentEntity } from '../entity/ProjectAttachment.entity';
+import { CreateFile } from './ManageFile.service';
 
 export class ProjectService {
     projectRepository: ProjectRepository;
@@ -68,6 +70,24 @@ export class ProjectService {
         return projectEntity;
     }
 
+    async addProjectAttachment(ctx: Context, projectAttachmentDto: IProjectAttachmentDto, id: number): Promise<ProjectEntity> {
+        const projectEntity: ProjectEntity = await ProjectEntity.findOne({ where: { id }, relations: ['attachments'] });
+        if (!projectEntity) {
+            ResponseService.throwReponseException(ctx, 'Project with id not found', ResponseCode.BAD_REQUEST);
+            return projectEntity;
+        }
+
+        const fileData = await CreateFile(projectAttachmentDto.base64);
+        const projectAttachmentEntity: ProjectAttachmentEntity = new ProjectAttachmentEntity();
+        projectAttachmentEntity.isVideo = projectAttachmentDto.isVideo;
+        projectAttachmentEntity.filePath = fileData.filePath;
+        await projectAttachmentEntity.save();
+
+        projectEntity.attachments.push(projectAttachmentEntity);
+        await projectEntity.save();
+        return projectEntity;
+    }
+
     async updateProjectTranslation(ctx: Context, projectDto: IProjectDto, id: number): Promise<ProjectTranslationEntity> {
         const projectTranslationEntity: ProjectTranslationEntity = await ProjectTranslationEntity.findOne({ where: { id } });
         if (!projectTranslationEntity) {
@@ -98,5 +118,15 @@ export class ProjectService {
         }
         await ProjectEntity.delete(projectEntity.id);
         return projectEntity;
+    }
+
+    async deleteProjectAttachment(ctx: Context, id: number): Promise<ProjectAttachmentEntity> {
+        const projectAttachmentEntity: ProjectAttachmentEntity = await ProjectAttachmentEntity.findOne({ where: { id } });
+        if (!projectAttachmentEntity) {
+            ResponseService.throwReponseException(ctx, 'Project Attachment with id not found', ResponseCode.BAD_REQUEST);
+            return projectAttachmentEntity;
+        }
+        await ProjectAttachmentEntity.delete(projectAttachmentEntity.id);
+        return projectAttachmentEntity;
     }
 }

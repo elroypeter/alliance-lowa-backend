@@ -54,6 +54,20 @@ export const project = (app: App): Route[] => [
         guards: [authGuard],
     },
     {
+        name: 'addProjectAttachment',
+        path: '/api/project/attachment/:id',
+        httpMethod: 'post',
+        action: getProjectController(app).addProjectAttachment,
+        guards: [authGuard],
+    },
+    {
+        name: 'deleteProjectAttachment',
+        path: '/api/project/attachment/:id',
+        httpMethod: 'delete',
+        action: getProjectController(app).deleteProjectAttachment,
+        guards: [authGuard],
+    },
+    {
         name: 'publishProject',
         path: '/api/project/publish/:id',
         httpMethod: 'put',

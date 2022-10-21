@@ -7,9 +7,6 @@ export class ProjectAttachmentEntity extends BaseEntity {
     id: number;
 
     @Column({ length: 200 })
-    altText: string;
-
-    @Column({ length: 200 })
     filePath: string;
 
     @Column({ type: 'bool' })
