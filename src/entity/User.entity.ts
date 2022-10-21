@@ -1,21 +1,22 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, CreateDateColumn, UpdateDateColumn, Unique } from 'typeorm';
 import { IUser } from '../interface/user.interface';
 
-@Entity('users')
+@Entity('users', {})
+@Unique(['email'])
 export class UserEntity extends BaseEntity implements IUser {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 255 })
+    @Column()
     name: string;
 
-    @Column({ length: 255 })
+    @Column()
     email: string;
 
-    @Column({ length: 255 })
+    @Column()
     password: string;
 
-    @Column({ length: 255, default: null })
+    @Column({ default: null })
     passwordResetCode: string;
 
     @CreateDateColumn()

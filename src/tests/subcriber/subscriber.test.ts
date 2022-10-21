@@ -46,7 +46,7 @@ describe('Subscriber tests', () => {
         const response = await Request(TestApp.koaInstance.callback()).delete(`/api/subscriber/${savedEmail[0].id}`).set('token', token);
         expect(response.status).toEqual(ResponseCode.ACCEPTED);
         expect(response.body).toBeDefined();
-        const deletedCareer = await SubscriberEntity.findOne({ where: { id: response.body.id } });
-        expect(deletedCareer).toBeNull();
+        const deletedSubscriber = await SubscriberEntity.findOne({ where: { id: response.body.id } });
+        expect(deletedSubscriber).toBeNull();
     });
 });

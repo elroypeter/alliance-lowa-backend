@@ -1,33 +1,28 @@
-/**
- * routes format
- *     {
- *       "@name": "route name",
- *       "@path": "/path_url",
- *       "@httpMethod": "get|post|put|patch|delete",
- *       "@action": controller method,
- *       "@guards": [middlewares and generators],
- *    }
- */
-export const user = [
-    // {
-    //     "@name": "getUsers",
-    //     "@path": "/user",
-    //     "@httpMethod": "get",
-    //     "@action": UserController.getUsers,
-    //     "@guards": [authGuard],
-    // },
-    // {
-    //     "@name": "saveUser",
-    //     "@path": "/user",
-    //     "@httpMethod": "post",
-    //     "@action": UserController.saveUser,
-    //     "@guards": [],
-    // },
-    // {
-    //     "@name": "deleteUser",
-    //     "@path": "/user/:id",
-    //     "@httpMethod": "delete",
-    //     "@action": UserController.deleteUser,
-    //     "@guards": [authGuard],
-    // },
+import { getUserController } from '../controller/User.controller';
+import { App } from '../bootstrap';
+import { authGuard } from '../middleware/auth.middleware';
+import { Route } from '../types/route.types';
+
+export const user = (app: App): Route[] => [
+    {
+        name: 'getUsers',
+        path: '/api/user',
+        httpMethod: 'get',
+        action: getUserController(app).getUsers,
+        guards: [authGuard],
+    },
+    {
+        name: 'saveUser',
+        path: '/api/user',
+        httpMethod: 'post',
+        action: getUserController(app).saveUser,
+        guards: [],
+    },
+    {
+        name: 'deleteUser',
+        path: '/api/user/:id',
+        httpMethod: 'delete',
+        action: getUserController(app).deleteUser,
+        guards: [authGuard],
+    },
 ];

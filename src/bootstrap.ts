@@ -16,56 +16,51 @@ import { AppConfig } from './types/appconfig.types';
 import { Server } from 'http';
 
 export class App {
-  koaInstance: Koa;
-  koaServer: Server;
-  dataSource: DataSource;
-  config: any;
+    koaInstance: Koa;
+    koaServer: Server;
+    dataSource: DataSource;
+    config: any;
 
-  constructor(dataConfig: any, dataSource: DataSource) {
-    this.config = dataConfig;
-    this.dataSource = dataSource;
-  }
+    constructor(dataConfig: any, dataSource: DataSource) {
+        this.config = dataConfig;
+        this.dataSource = dataSource;
+    }
 
-  async initApp(appConfig?: AppConfig): Promise<App> {
-    // sync data in test|dev mode
-    if (this.config.app_env !== 'prod') await this.dataSource.synchronize(true);
+    async initApp(appConfig?: AppConfig): Promise<App> {
+        // sync data in test|dev mode
+        if (this.config.app_env !== 'prod') await this.dataSource.synchronize(true);
 
-    // instantiate Koa
-    this.koaInstance = new Koa();
-    const router = new Router();
+        // instantiate Koa
+        this.koaInstance = new Koa();
+        const router = new Router();
 
-    // bind middleware to Koa instance
-    if (appConfig?.enableKoaLogger) this.koaInstance.use(Logger());
-    this.koaInstance.use(KoaBody({ jsonLimit: '20mb' }));
-    this.koaInstance.use(KoaCors());
+        // bind middleware to Koa instance
+        if (appConfig?.enableKoaLogger) this.koaInstance.use(Logger());
+        this.koaInstance.use(KoaBody({ jsonLimit: '20mb' }));
+        this.koaInstance.use(KoaCors());
 
-    // mount image server middleware
-    this.koaInstance.use(
-      KoaMount('/images', KoaStatic(Path.join(__dirname, '../public'))),
-    );
+        // mount image server middleware
+        this.koaInstance.use(KoaMount('/images', KoaStatic(Path.join(__dirname, '../public'))));
 
-    // compress traffic
-    const compressOpts = {
-      filter: (content_type) => /text/i.test(content_type),
-      threshold: 2048,
-      flush: zlib.constants.Z_SYNC_FLUSH,
-    };
-    this.koaInstance.use(KoaCompress(compressOpts));
+        // compress traffic
+        const compressOpts = {
+            filter: (content_type) => /text/i.test(content_type),
+            threshold: 2048,
+            flush: zlib.constants.Z_SYNC_FLUSH,
+        };
+        this.koaInstance.use(KoaCompress(compressOpts));
 
-    // rate limiting
-    this.koaInstance.use(
-      KoaRateLimit({ duration: 1000 * 60 * 3, max: 1000, blacklist: [] }),
-    );
+        // rate limiting
+        this.koaInstance.use(KoaRateLimit({ duration: 1000 * 60 * 3, max: 1000, blacklist: [] }));
 
-    // configure routes
-    Routes(router, this);
-    this.koaInstance.use(router.routes());
+        // configure routes
+        Routes(router, this);
+        this.koaInstance.use(router.routes());
 
-    this.koaServer = this.koaInstance.listen(this.config.app_port, () => {
-      if (this.config.app_env !== 'test')
-        console.info(`server is running at port ${this.config.app_port}`);
-    });
+        this.koaServer = this.koaInstance.listen(this.config.app_port, () => {
+            if (this.config.app_env !== 'test') console.info(`server is running at port ${this.config.app_port}`);
+        });
 
-    return this;
-  }
+        return this;
+    }
 }
