@@ -2,6 +2,8 @@ import { authGuard } from '../middleware/auth.middleware';
 import { Route } from '../types/route.types';
 import { App } from '../bootstrap';
 import { getSubscriberController } from '../controller/Subscriber.controller';
+import { validator } from '../middleware/validate.middleware';
+import { SubscriberSchema } from '../interface/subscriber.interface';
 
 export const subscriber = (app: App): Route[] => [
     {
@@ -16,7 +18,7 @@ export const subscriber = (app: App): Route[] => [
         path: '/api/subscriber',
         httpMethod: 'post',
         action: getSubscriberController(app).saveSubscriber,
-        guards: [],
+        guards: [validator(SubscriberSchema, ['body'])],
     },
     {
         name: 'deleteSubscriber',

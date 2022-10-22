@@ -27,6 +27,11 @@ describe('Subscriber tests', () => {
         token = loginResponse.body.token;
     });
 
+    it('save subscriber with unsupported email format', async () => {
+        const response = await Request(TestApp.koaInstance.callback()).post('/api/subscriber').send({ email: 'subscriber@gmail.xyz' });
+        expect(response.status).toEqual(ResponseCode.BAD_REQUEST);
+    });
+
     it('save subscriber', async () => {
         const response = await Request(TestApp.koaInstance.callback()).post('/api/subscriber').send({ email: 'subscriber@gmail.com' });
         expect(response.status).toEqual(ResponseCode.CREATED);
