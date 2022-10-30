@@ -12,6 +12,6 @@ export class ProjectAttachmentEntity extends BaseEntity {
     @Column({ type: 'bool' })
     isVideo: boolean;
 
-    @ManyToOne(() => ProjectEntity, (project) => project.attachments)
+    @ManyToOne(() => ProjectEntity, (project) => project.attachments, { onDelete: 'CASCADE' })
     project: ProjectEntity;
 }

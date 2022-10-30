@@ -22,6 +22,20 @@ class ProjectController {
         return;
     };
 
+    getAllProject = async (ctx: Context): Promise<RouteAction> => {
+        const projects: ProjectEntity[] = await this.projectService.getAllProjects();
+        ResponseService.res(ctx, ResponseCode.OK, projects);
+        return;
+    };
+
+    getOneProject = async (ctx: Context): Promise<RouteAction> => {
+        const id = parseInt(ctx.params.id);
+        const project = await this.projectService.getSingleProjects(ctx, id);
+        if (!project) return;
+        ResponseService.res(ctx, ResponseCode.OK, project);
+        return;
+    };
+
     getSingleProject = async (ctx: Context): Promise<RouteAction> => {
         const id = parseInt(ctx.params.id);
         const { langCode } = ctx.request.query as { [x: string]: string & undefined };
@@ -42,6 +56,13 @@ class ProjectController {
         const id: number = parseInt(ctx.params.id);
         const projectDto: IProjectDto = ctx.request.body;
         const projects: ProjectEntity = await this.projectService.addProjectTranslation(ctx, projectDto, id);
+        ResponseService.res(ctx, ResponseCode.CREATED, projects);
+        return;
+    };
+
+    deleteProjectTranslation = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const projects: ProjectTranslationEntity = await this.projectService.deleteProjectTranslation(ctx, id);
         ResponseService.res(ctx, ResponseCode.CREATED, projects);
         return;
     };

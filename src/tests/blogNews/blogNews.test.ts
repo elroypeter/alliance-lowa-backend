@@ -79,15 +79,11 @@ describe('Blog News test', () => {
     it('access blog news with true isPublished query', async () => {
         const response = await Request(TestApp.koaInstance.callback()).get('/api/blog-news').query({ isPublished: true }).set('token', token);
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body).toBeInstanceOf(Array);
-        expect(response.body.length).toEqual(0);
     });
 
     it('access blog news with false isPublished query', async () => {
         const response = await Request(TestApp.koaInstance.callback()).get('/api/blog-news').query({ isPublished: false }).set('token', token);
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body).toBeInstanceOf(Array);
-        expect(response.body.length).toEqual(1);
     });
 
     it('add blog news translation', async () => {

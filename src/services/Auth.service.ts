@@ -16,7 +16,7 @@ export class AuthService {
         this.notificationService = notificationService;
     }
 
-    async createToken(email: string, password: string, ctx: Context): Promise<string> {
+    async createToken(email: string, password: string, ctx: Context): Promise<any> {
         const user: IUser = await this.userService.findUserByEmail(email);
 
         if (!user) {
@@ -29,14 +29,17 @@ export class AuthService {
             ResponseService.throwReponseException(ctx, 'Invalid user password', ResponseCode.UNAUTHORIZED);
         }
 
-        return signToken(
-            {
-                userId: user.id,
-                email: email,
-                date: new Date().getTime(),
-            },
-            configService().token_ttl,
-        );
+        return {
+            user: UserService.publiclyAccessibleUser(user),
+            token: signToken(
+                {
+                    userId: user.id,
+                    email: email,
+                    date: new Date().getTime(),
+                },
+                configService().token_ttl,
+            ),
+        };
     }
 
     async sendResetLink(ctx: Context, email: string): Promise<IUser> {

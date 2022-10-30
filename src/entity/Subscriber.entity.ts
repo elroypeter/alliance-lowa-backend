@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('subcriber')
 export class SubscriberEntity extends BaseEntity {
@@ -7,4 +7,10 @@ export class SubscriberEntity extends BaseEntity {
 
     @Column({ length: 255 })
     email: string;
+
+    @CreateDateColumn()
+    createdAt: string;
+
+    @UpdateDateColumn()
+    updatedAt: string;
 }

@@ -28,7 +28,8 @@ export class App {
 
     async initApp(appConfig?: AppConfig): Promise<App> {
         // sync data in test|dev mode
-        if (this.config.app_env !== 'prod') await this.dataSource.synchronize(true);
+        // if (this.config.app_env !== 'production') await this.dataSource.synchronize(true);
+        // await this.dataSource.synchronize(true);
 
         // instantiate Koa
         this.koaInstance = new Koa();
@@ -36,7 +37,7 @@ export class App {
 
         // bind middleware to Koa instance
         if (appConfig?.enableKoaLogger) this.koaInstance.use(Logger());
-        this.koaInstance.use(KoaBody({ jsonLimit: '20mb' }));
+        this.koaInstance.use(KoaBody({ jsonLimit: '40mb' }));
         this.koaInstance.use(KoaCors());
 
         // mount image server middleware

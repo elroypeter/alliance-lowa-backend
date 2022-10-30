@@ -21,6 +21,11 @@ export class ProjectService {
         return results;
     }
 
+    async getAllProjects(): Promise<ProjectEntity[]> {
+        const results = await ProjectEntity.find({ relations: ['isPublished', 'translations', 'attachments'] });
+        return results;
+    }
+
     async findOneProject(ctx: Context, id: number, langCode?: string | undefined): Promise<IProject> {
         const project = await this.projectRepository.findOneLocaleProject(langCode, id);
         if (!project) {
@@ -28,6 +33,15 @@ export class ProjectService {
             return project;
         }
         return project;
+    }
+
+    async getSingleProjects(ctx: Context, id: number): Promise<ProjectEntity> {
+        const results = await ProjectEntity.findOne({ where: { id }, relations: ['isPublished', 'translations', 'attachments'] });
+        if (!results) {
+            ResponseService.throwReponseException(ctx, 'Project with id not found', ResponseCode.BAD_REQUEST);
+            return results;
+        }
+        return results;
     }
 
     async saveProject(projectDto: IProjectDto): Promise<ProjectEntity[]> {
@@ -128,5 +142,15 @@ export class ProjectService {
         }
         await ProjectAttachmentEntity.delete(projectAttachmentEntity.id);
         return projectAttachmentEntity;
+    }
+
+    async deleteProjectTranslation(ctx: Context, id: number): Promise<ProjectTranslationEntity> {
+        const projectTranslationEntity: ProjectTranslationEntity = await ProjectTranslationEntity.findOne({ where: { id } });
+        if (!projectTranslationEntity) {
+            ResponseService.throwReponseException(ctx, 'Project Translation with id not found', ResponseCode.BAD_REQUEST);
+            return projectTranslationEntity;
+        }
+        await ProjectTranslationEntity.delete(projectTranslationEntity.id);
+        return projectTranslationEntity;
     }
 }

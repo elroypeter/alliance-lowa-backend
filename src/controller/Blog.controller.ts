@@ -22,6 +22,19 @@ class BlogController {
         return;
     };
 
+    getAllBlog = async (ctx: Context): Promise<RouteAction> => {
+        const blogs: BlogNewsEntity[] = await this.blogService.getAllBlog();
+        ResponseService.res(ctx, ResponseCode.OK, blogs);
+        return;
+    };
+
+    getOneBlog = async (ctx: Context): Promise<RouteAction> => {
+        const id = parseInt(ctx.params.id);
+        const blog: BlogNewsEntity = await this.blogService.getOneBlog(ctx, id);
+        ResponseService.res(ctx, ResponseCode.OK, blog);
+        return;
+    };
+
     getSingleBlog = async (ctx: Context): Promise<RouteAction> => {
         const id = parseInt(ctx.params.id);
         const { langCode } = ctx.request.query as { [x: string]: string & undefined };

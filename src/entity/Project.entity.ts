@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, BaseEntity, OneToMany, JoinColumn, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, BaseEntity, OneToMany, JoinColumn, OneToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { IProject } from '../interface/project.interface';
 import { Translatable } from '../locale/locale-types';
 import { ProjectAttachmentEntity } from './ProjectAttachment.entity';
@@ -19,4 +19,10 @@ export class ProjectEntity extends BaseEntity implements Translatable<IProject> 
 
     @OneToMany(() => ProjectTranslationEntity, (translation) => translation.base)
     translations: ProjectTranslationEntity[];
+
+    @CreateDateColumn()
+    createdAt: string;
+
+    @UpdateDateColumn()
+    updatedAt: string;
 }

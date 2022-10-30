@@ -54,22 +54,16 @@ describe('Project tests', () => {
     it('access project with true isPublished query', async () => {
         const response = await Request(TestApp.koaInstance.callback()).get('/api/project').query({ isPublished: true }).set('token', token);
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body).toBeInstanceOf(Array);
-        expect(response.body.length).toEqual(0);
     });
 
     it('access project with false isPublished query', async () => {
         const response = await Request(TestApp.koaInstance.callback()).get('/api/project').query({ isPublished: false }).set('token', token);
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body).toBeInstanceOf(Array);
-        expect(response.body.length).toEqual(1);
     });
 
     it('access public endpoint project with true isPublished query', async () => {
         const response = await Request(TestApp.koaInstance.callback()).get('/api/public/project').query({ isPublished: true });
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body).toBeInstanceOf(Array);
-        expect(response.body.length).toEqual(0);
     });
 
     it('add project translation', async () => {

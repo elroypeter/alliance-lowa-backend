@@ -8,7 +8,7 @@ export const project = (app: App): Route[] => [
         name: 'getProjects',
         path: '/api/project',
         httpMethod: 'get',
-        action: getProjectController(app).getProject,
+        action: getProjectController(app).getAllProject,
         guards: [authGuard],
     },
     {
@@ -22,7 +22,7 @@ export const project = (app: App): Route[] => [
         name: 'getSingleProject',
         path: '/api/project/:id',
         httpMethod: 'get',
-        action: getProjectController(app).getSingleProject,
+        action: getProjectController(app).getOneProject,
         guards: [authGuard],
     },
     {
@@ -51,6 +51,13 @@ export const project = (app: App): Route[] => [
         path: '/api/project/translation/:id',
         httpMethod: 'put',
         action: getProjectController(app).updateProjectTranslation,
+        guards: [authGuard],
+    },
+    {
+        name: 'deleteProjectTranslation',
+        path: '/api/translation/project/:id',
+        httpMethod: 'delete',
+        action: getProjectController(app).deleteProjectTranslation,
         guards: [authGuard],
     },
     {
