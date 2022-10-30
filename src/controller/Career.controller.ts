@@ -42,6 +42,14 @@ class CareerController {
         return;
     };
 
+    changePublishStatus = async (ctx: Context): Promise<RouteAction> => {
+        const { status } = ctx.request.body;
+        const id: number = parseInt(ctx.params.id);
+        const career: CareerEntity = await this.careerService.changePublishStatus(ctx, status, id);
+        ResponseService.res(ctx, ResponseCode.ACCEPTED, career);
+        return;
+    };
+
     deleteCareer = async (ctx: Context): Promise<RouteAction> => {
         const id = parseInt(ctx.params.id);
         const career = await this.careerService.deleteCareer(ctx, id);

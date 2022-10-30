@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { IBlogNews } from '../interface/career-news.interface';
 import { Translatable } from '../locale/locale-types';
 import { BlogNewsTranslationEntity } from './BlogNewsTranslation.entity';
@@ -18,4 +18,10 @@ export class BlogNewsEntity extends BaseEntity implements Translatable<IBlogNews
 
     @OneToMany(() => BlogNewsTranslationEntity, (translation) => translation.base)
     translations: BlogNewsTranslationEntity[];
+
+    @CreateDateColumn()
+    createdAt: string;
+
+    @UpdateDateColumn()
+    updatedAt: string;
 }

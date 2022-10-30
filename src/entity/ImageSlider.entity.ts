@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Translatable } from '../locale/locale-types';
 import { IImageSlider } from '../interface/image-slider.interface';
 import { ImageSliderTranslationEntity } from './ImageSliderTranslation.Entity';
@@ -18,4 +18,10 @@ export class ImageSliderEntity extends BaseEntity implements Translatable<IImage
 
     @OneToMany(() => ImageSliderTranslationEntity, (translation) => translation.base)
     translations: ImageSliderTranslationEntity[];
+
+    @CreateDateColumn()
+    createdAt: string;
+
+    @UpdateDateColumn()
+    updatedAt: string;
 }

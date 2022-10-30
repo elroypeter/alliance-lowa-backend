@@ -4,11 +4,11 @@ export interface IImageSlider {
     filePath: string;
     title: LocaleString;
     description: LocaleString;
-    isPublished: IPublishStatus;
+    isPublished: IPublishStatus | boolean;
 }
 
 export interface IImageSliderDto {
-    langCode: string;
+    langCode?: string;
     base64?: string;
     title: string;
     description: string;

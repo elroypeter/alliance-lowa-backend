@@ -18,7 +18,7 @@ class AuthController {
     login = async (ctx: Context): Promise<RouteAction> => {
         const { email, password }: any = ctx.request.body;
         const token = await this.authService.createToken(email, password, ctx);
-        ResponseService.res(ctx, ResponseCode.OK, { token });
+        ResponseService.res(ctx, ResponseCode.OK, { ...token });
         return;
     };
 

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { IContactMessage } from '../interface/contact-message.interface';
 
 @Entity('contact-message')
@@ -17,4 +17,10 @@ export class ContactMessageEntity extends BaseEntity implements IContactMessage 
 
     @Column({ type: 'text' })
     message: string;
+
+    @CreateDateColumn()
+    createdAt: string;
+
+    @UpdateDateColumn()
+    updatedAt: string;
 }

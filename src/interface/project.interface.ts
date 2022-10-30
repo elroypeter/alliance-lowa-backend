@@ -17,7 +17,11 @@ export interface IProjectDto {
 }
 
 export interface IProjectAttachment {
-    altText: string;
     filePath: string;
+    isVideo: boolean;
+}
+
+export interface IProjectAttachmentDto {
+    base64: string;
     isVideo: boolean;
 }

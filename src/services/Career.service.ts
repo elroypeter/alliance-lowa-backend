@@ -8,7 +8,7 @@ import { ResponseService } from './Response.service';
 
 export class CareerService {
     async findAllCareer(): Promise<ICareer[]> {
-        return await CareerEntity.find();
+        return await CareerEntity.find({ relations: ['isPublished'] });
     }
 
     async findOneCareer(ctx: Context, id): Promise<CareerEntity> {
@@ -54,6 +54,16 @@ export class CareerService {
 
         if (careerDto.title) careerDto.slug = slugify(careerDto.title, { lower: true });
         await CareerEntity.getRepository().update({ id: careerEntity.id }, { ...careerDto });
+        return careerEntity;
+    }
+
+    async changePublishStatus(ctx: Context, status: boolean, id: number): Promise<CareerEntity> {
+        const careerEntity: CareerEntity = await CareerEntity.findOne({ where: { id }, relations: ['isPublished'] });
+        if (!careerEntity) {
+            ResponseService.throwReponseException(ctx, 'Career with id not found', ResponseCode.BAD_REQUEST);
+            return careerEntity;
+        }
+        await PublishStatusEntity.getRepository().update({ id: careerEntity.isPublished.id }, { status });
         return careerEntity;
     }
 }

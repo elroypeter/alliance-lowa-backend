@@ -5,10 +5,12 @@ import { ResponseCode } from '../../enums/response.enums';
 import { UserEntity } from '../../entity/User.entity';
 import { ProjectTranslationEntity } from '../../entity/ProjectTranslationEntity';
 import { ProjectEntity } from '../../entity/Project.entity';
+import { DeleteFile } from '../../services/ManageFile.service';
 
 describe('Project tests', () => {
     let token;
     let selectedProject;
+    let attachment;
 
     beforeAll(async () => {
         const email = 'test@gmail.com';
@@ -52,22 +54,16 @@ describe('Project tests', () => {
     it('access project with true isPublished query', async () => {
         const response = await Request(TestApp.koaInstance.callback()).get('/api/project').query({ isPublished: true }).set('token', token);
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body).toBeInstanceOf(Array);
-        expect(response.body.length).toEqual(0);
     });
 
     it('access project with false isPublished query', async () => {
         const response = await Request(TestApp.koaInstance.callback()).get('/api/project').query({ isPublished: false }).set('token', token);
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body).toBeInstanceOf(Array);
-        expect(response.body.length).toEqual(1);
     });
 
     it('access public endpoint project with true isPublished query', async () => {
         const response = await Request(TestApp.koaInstance.callback()).get('/api/public/project').query({ isPublished: true });
         expect(response.status).toEqual(ResponseCode.OK);
-        expect(response.body).toBeInstanceOf(Array);
-        expect(response.body.length).toEqual(0);
     });
 
     it('add project translation', async () => {
@@ -111,6 +107,29 @@ describe('Project tests', () => {
         expect(response.status).toEqual(ResponseCode.CREATED);
         const updatedProjectTranslation = await ProjectTranslationEntity.findOne({ where: { id: response.body.id } });
         expect(updatedProjectTranslation.title).toEqual('Updated Alliance Lowa');
+    });
+
+    it('add project attachment', async () => {
+        const projectAttachment = {
+            isVideo: false,
+            base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII',
+        };
+
+        const response = await Request(TestApp.koaInstance.callback())
+            .post(`/api/project/attachment/${selectedProject.id}`)
+            .set('token', token)
+            .send(projectAttachment);
+        attachment = response.body.attachments[0];
+        expect(response.status).toEqual(ResponseCode.CREATED);
+        expect(response.body.attachments.length).toBeGreaterThan(0);
+        await DeleteFile(attachment.filePath);
+    });
+
+    it('delete project attachment', async () => {
+        const response = await Request(TestApp.koaInstance.callback()).delete(`/api/project/attachment/${attachment.id}`).set('token', token);
+        expect(response.status).toEqual(ResponseCode.ACCEPTED);
+        const project = await ProjectEntity.findOne({ where: { id: selectedProject.id }, relations: ['attachments'] });
+        expect(project.attachments.length).toEqual(0);
     });
 
     it('publish project', async () => {

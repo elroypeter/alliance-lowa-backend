@@ -23,6 +23,19 @@ class ImageSliderController {
         return;
     };
 
+    getAllImageSliders = async (ctx: Context): Promise<RouteAction> => {
+        const imageSliders: ImageSliderEntity[] = await this.imageSliderService.getAllImageSliders();
+        ResponseService.res(ctx, ResponseCode.OK, imageSliders);
+        return;
+    };
+
+    getSingleImageSlider = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const imageSlider: ImageSliderEntity = await this.imageSliderService.getSingleImageSlider(ctx, id);
+        ResponseService.res(ctx, ResponseCode.OK, imageSlider);
+        return;
+    };
+
     saveImageSlider = async (ctx: Context): Promise<RouteAction> => {
         const imageSliderDto: IImageSliderDto = ctx.request.body;
         const images: ImageSliderEntity[] = await this.imageSliderService.saveImageSlider(imageSliderDto);
@@ -57,6 +70,13 @@ class ImageSliderController {
     deleteImageSlider = async (ctx: Context): Promise<RouteAction> => {
         const id: number = parseInt(ctx.params.id);
         const image: ImageSliderEntity = await this.imageSliderService.deleteImageSlider(ctx, id);
+        ResponseService.res(ctx, ResponseCode.ACCEPTED, image);
+        return;
+    };
+
+    deleteTranslation = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const image: ImageSliderTranslationEntity = await this.imageSliderService.deleteTranslation(ctx, id);
         ResponseService.res(ctx, ResponseCode.ACCEPTED, image);
         return;
     };

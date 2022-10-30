@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('publish-status')
 export class PublishStatusEntity extends BaseEntity {
@@ -10,4 +10,10 @@ export class PublishStatusEntity extends BaseEntity {
 
     @Column({ type: 'bool', default: false })
     status: boolean;
+
+    @CreateDateColumn()
+    createdAt: string;
+
+    @UpdateDateColumn()
+    updatedAt: string;
 }

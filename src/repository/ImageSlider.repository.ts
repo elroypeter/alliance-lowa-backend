@@ -8,28 +8,39 @@ export class ImageSliderRepository extends Repository<ImageSliderEntity> {
         super(ImageSliderEntity, dataSource.createEntityManager());
     }
 
-    async findLocaleImageSlide(langCode: string | undefined, pubStatus: boolean): Promise<IImageSlider[]> {
+    async findLocaleImageSlide(langCode: string | undefined, pubStatus?: boolean): Promise<IImageSlider[]> {
         if (pubStatus) {
-            return this.translateImageSlide(
-                await this.getImageSliderQuery(langCode)
-                    .leftJoinAndSelect('imageSlider.isPublished', 'publishStatus')
-                    .andWhere('publishStatus.entity = :entityI', { entityI: 'ImageSliderEntity' })
-                    .andWhere('publishStatus.status = :pubStatus', { pubStatus })
-                    .getMany(),
+            return this.transformPublishStatus(
+                this.translateImageSlide(
+                    await this.getImageSliderQuery(langCode)
+                        .andWhere('publishStatus.entity = :entityI', { entityI: 'ImageSliderEntity' })
+                        .andWhere('publishStatus.status = :pubStatus', { pubStatus })
+                        .getMany(),
+                ),
             );
         }
-        return this.translateImageSlide(await this.getImageSliderQuery(langCode).getMany());
+        return this.transformPublishStatus(this.translateImageSlide(await this.getImageSliderQuery(langCode).getMany()));
     }
 
     private getImageSliderQuery(langCode: string | undefined): SelectQueryBuilder<ImageSliderEntity> {
         const code = langCode || 'en';
         return this.manager
             .createQueryBuilder(ImageSliderEntity, 'imageSlider')
+            .leftJoinAndSelect('imageSlider.isPublished', 'publishStatus')
             .leftJoinAndSelect('imageSlider.translations', 'imageTranslation')
             .where('imageTranslation.langCode = :code', { code });
     }
 
     private translateImageSlide(result: ImageSliderEntity[]): IImageSlider[] {
         return result.map((imageSliderEntity: ImageSliderEntity) => translate<IImageSlider>(imageSliderEntity));
+    }
+
+    private transformPublishStatus(result: IImageSlider[]): IImageSlider[] {
+        return result.map((imageSlider: IImageSlider) => {
+            if (typeof imageSlider.isPublished !== 'boolean') {
+                imageSlider.isPublished = imageSlider.isPublished.status;
+            }
+            return imageSlider;
+        });
     }
 }

@@ -20,6 +20,20 @@ export class BlogService {
         return results;
     }
 
+    async getAllBlog(): Promise<BlogNewsEntity[]> {
+        const blogNewsEntity: BlogNewsEntity[] = await BlogNewsEntity.find({ relations: ['isPublished', 'translations'] });
+        return blogNewsEntity;
+    }
+
+    async getOneBlog(ctx: Context, id: number): Promise<BlogNewsEntity> {
+        const blogNewsEntity: BlogNewsEntity = await BlogNewsEntity.findOne({ where: { id }, relations: ['isPublished', 'translations'] });
+        if (!blogNewsEntity) {
+            ResponseService.throwReponseException(ctx, 'Blog with id not found', ResponseCode.BAD_REQUEST);
+            return blogNewsEntity;
+        }
+        return blogNewsEntity;
+    }
+
     async findOneBlog(ctx: Context, id: number, langCode?: string | undefined): Promise<IBlogNews> {
         const blog = await this.blogRepository.findOneLocaleBlog(langCode, id);
         if (!blog) {

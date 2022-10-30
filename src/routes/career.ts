@@ -47,6 +47,13 @@ export const career = (app: App): Route[] => [
         guards: [authGuard],
     },
     {
+        name: 'publishCareer',
+        path: '/api/careers/publish/:id',
+        httpMethod: 'patch',
+        action: getCareerController(app).changePublishStatus,
+        guards: [authGuard],
+    },
+    {
         name: 'deleteCareer',
         path: '/api/careers/:id',
         httpMethod: 'delete',

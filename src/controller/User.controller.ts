@@ -1,43 +1,39 @@
+import { Context } from 'koa';
+import { ResponseCode } from '../enums/response.enums';
+import { IUser, IUserDto } from '../interface/user.interface';
+import { UserRepository } from '../repository/User.repository';
+import { ResponseService } from '../services/Response.service';
+import { UserService } from '../services/User.service';
+import { RouteAction } from '../types/route.types';
+import { App } from '../bootstrap';
+
 class UserController {
-    // async getUsers(ctx: Context, next: Next) {
-    //     const users: User[] = await User.find();
-    //     ctx.status = 200;
-    //     ctx.body = this.tranformToPublicUsers(users);
-    // }
-    // private tranformToPublicUsers(users: User[]): Pick<User, PublicUser>[]{
-    //     return users.map((user: User) => this.publiclyAccessibleUser(user))
-    // }
-    // private publiclyAccessibleUser(user: User): Pick<User, PublicUser>{
-    //     return {
-    //         id: user.id,
-    //         name: user.name,
-    //         email: user.email
-    //     }
-    // }
-    // async saveUser(ctx: Context, next: Next) {
-    //     const { name, email, password } = ctx.request.body;
-    //     // validate user details
-    //     if (!(email && password && name)) {
-    //         ctx.status = 400;
-    //         ctx.message = "email or password or name is missing";
-    //         return;
-    //     }
-    //     // check if user exists
-    //     const oldUser: User = await User.findOne({ where: { email } });
-    //     if (oldUser) {
-    //         ctx.state = 400;
-    //         ctx.message = "user with email already exists";
-    //         return;
-    //     }
-    //     const user: User = new User();
-    //     user.email = email;
-    //     user.name = name;
-    //     user.password = await Bcrypt.hash(password, 10);
-    //     await user.save();
-    //     ctx.status = 200;
-    //     ctx.body = { message: "saved successfully" };
-    // }
-    // async deleteUser(ctx: Context, next: Next) {}
+    userService: UserService;
+    constructor(userService: UserService) {
+        this.userService = userService;
+    }
+
+    getUsers = async (ctx: Context): Promise<RouteAction> => {
+        const users = await this.userService.findAllUsers();
+        ResponseService.res(ctx, ResponseCode.OK, users);
+        return;
+    };
+
+    saveUser = async (ctx: Context): Promise<RouteAction> => {
+        const user: IUserDto = ctx.request.body;
+        const result = await this.userService.saveUser(ctx, user);
+        if (!result) return;
+        ResponseService.res(ctx, ResponseCode.CREATED, result);
+        return;
+    };
+
+    deleteUser = async (ctx: Context): Promise<RouteAction> => {
+        const id = parseInt(ctx.params.id);
+        const user: IUser = await this.userService.deleteUser(ctx, id);
+        ResponseService.res(ctx, ResponseCode.ACCEPTED, user);
+        return;
+    };
 }
 
-export const UserControllerObj = new UserController();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const getUserController = (app: App) => new UserController(new UserService(new UserRepository(app.dataSource)));

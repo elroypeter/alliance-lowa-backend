@@ -1,6 +1,6 @@
 import { Context } from 'koa';
 import { ResponseCode } from '../enums/response.enums';
-import { IProject, IProjectDto } from '../interface/project.interface';
+import { IProject, IProjectAttachmentDto, IProjectDto } from '../interface/project.interface';
 import { ResponseService } from '../services/Response.service';
 import { RouteAction } from '../types/route.types';
 import { App } from '../bootstrap';
@@ -8,6 +8,7 @@ import { ProjectRepository } from '../repository/Project.repository';
 import { ProjectService } from '../services/Project.service';
 import { ProjectEntity } from '../entity/Project.entity';
 import { ProjectTranslationEntity } from '../entity/ProjectTranslationEntity';
+import { ProjectAttachmentEntity } from '../entity/ProjectAttachment.entity';
 class ProjectController {
     projectService: ProjectService;
     constructor(projectService: ProjectService) {
@@ -18,6 +19,20 @@ class ProjectController {
         const { langCode, isPublished } = ctx.request.query as { [x: string]: string & undefined };
         const projects: IProject[] = await this.projectService.getProjects(langCode, isPublished === 'true' ? true : false);
         ResponseService.res(ctx, ResponseCode.OK, projects);
+        return;
+    };
+
+    getAllProject = async (ctx: Context): Promise<RouteAction> => {
+        const projects: ProjectEntity[] = await this.projectService.getAllProjects();
+        ResponseService.res(ctx, ResponseCode.OK, projects);
+        return;
+    };
+
+    getOneProject = async (ctx: Context): Promise<RouteAction> => {
+        const id = parseInt(ctx.params.id);
+        const project = await this.projectService.getSingleProjects(ctx, id);
+        if (!project) return;
+        ResponseService.res(ctx, ResponseCode.OK, project);
         return;
     };
 
@@ -45,6 +60,21 @@ class ProjectController {
         return;
     };
 
+    deleteProjectTranslation = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const projects: ProjectTranslationEntity = await this.projectService.deleteProjectTranslation(ctx, id);
+        ResponseService.res(ctx, ResponseCode.CREATED, projects);
+        return;
+    };
+
+    addProjectAttachment = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const projectAttachmentDto: IProjectAttachmentDto = ctx.request.body;
+        const projects: ProjectEntity = await this.projectService.addProjectAttachment(ctx, projectAttachmentDto, id);
+        ResponseService.res(ctx, ResponseCode.CREATED, projects);
+        return;
+    };
+
     updateProjectTranslation = async (ctx: Context): Promise<RouteAction> => {
         const id: number = parseInt(ctx.params.id);
         const projectDto: IProjectDto = ctx.request.body;
@@ -68,31 +98,12 @@ class ProjectController {
         return;
     };
 
-    // async addImage(ctx: Context, next: Next) {
-    //     const projects: Project[] = await Project.find({
-    //         where: { id: ctx.params.id },
-    //         relations: ["images"],
-    //     });
-    //     const { image } = ctx.request.body;
-    //     const projectImage: ProjectImage = new ProjectImage();
-    //     const fileData = await CreateFile(image);
-    //     projectImage.imageData = fileData.image;
-    //     projectImage.filePath = fileData.filePath;
-    //     await projectImage.save();
-    //     projects[0].images.push(projectImage);
-    //     await projects[0].save();
-    //     ctx.body = { message: "saved successfully" };
-    //     ctx.status = 200;
-    // }
-    // async removeImage(ctx: Context, next: Next) {
-    //     const projectImage: ProjectImage = await ProjectImage.findOneBy({
-    //         id: ctx.params.id,
-    //     });
-    //     await DeleteFile(projectImage.filePath);
-    //     await projectImage.remove();
-    //     ctx.body = { message: "removed successfully" };
-    //     ctx.status = 200;
-    // }
+    deleteProjectAttachment = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const projectAttachmentEntity: ProjectAttachmentEntity = await this.projectService.deleteProjectAttachment(ctx, id);
+        ResponseService.res(ctx, ResponseCode.ACCEPTED, projectAttachmentEntity);
+        return;
+    };
 }
 
 export const getProjectController = (app: App) => new ProjectController(new ProjectService(new ProjectRepository(app.dataSource)));

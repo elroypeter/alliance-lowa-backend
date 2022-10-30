@@ -13,7 +13,7 @@ import { blog } from './blog';
 const routes = (app: App) => [
     ...subscriber(app),
     ...auth(app),
-    ...user,
+    ...user(app),
     ...imageSlider(app),
     ...project(app),
     ...message(app),

@@ -20,6 +20,6 @@ export class ProjectTranslationEntity extends BaseEntity implements Translation<
     @Column({ type: 'text' })
     description: string;
 
-    @ManyToOne(() => ProjectEntity, (slider) => slider.translations)
+    @ManyToOne(() => ProjectEntity, (slider) => slider.translations, { onDelete: 'CASCADE' })
     base: ProjectEntity;
 }

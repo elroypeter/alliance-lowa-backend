@@ -5,9 +5,9 @@ import { ResponseCode } from '../../enums/response.enums';
 import { UserEntity } from '../../entity/User.entity';
 import { SubscriberEntity } from '../../entity/Subscriber.entity';
 
-describe('Subscriber tests', () => {
+describe('User Account tests', () => {
     let token;
-    let savedEmail;
+    let users;
 
     beforeAll(async () => {
         const email = 'test@gmail.com';
@@ -27,31 +27,42 @@ describe('Subscriber tests', () => {
         token = loginResponse.body.token;
     });
 
-    it('save subscriber with unsupported email format', async () => {
-        const response = await Request(TestApp.koaInstance.callback()).post('/api/subscriber').send({ email: 'subscriber@gmail.xyz' });
+    it('save user account', async () => {
+        const newUser = {
+            name: 'Kenneth Meo',
+            email: 'test@gmail.com',
+            password: 'test',
+        };
+        const response = await Request(TestApp.koaInstance.callback()).post('/api/user').send(newUser);
         expect(response.status).toEqual(ResponseCode.BAD_REQUEST);
     });
 
-    it('save subscriber', async () => {
-        const response = await Request(TestApp.koaInstance.callback()).post('/api/subscriber').send({ email: 'subscriber@gmail.com' });
+    it('save user account', async () => {
+        const newUser = {
+            name: 'Kenneth Meo',
+            email: 'kenneth@gmail.com',
+            password: 'test',
+        };
+        const response = await Request(TestApp.koaInstance.callback()).post('/api/user').send(newUser);
         expect(response.status).toEqual(ResponseCode.CREATED);
-        savedEmail = await SubscriberEntity.find();
-        expect(savedEmail).toBeInstanceOf(Array);
-        expect(savedEmail.length).toBeGreaterThan(0);
-        expect(savedEmail[0].email).toEqual('subscriber@gmail.com');
+        users = await UserEntity.find();
+        expect(users).toBeInstanceOf(Array);
+        expect(users.length).toBeGreaterThan(0);
+        expect(users[1].email).toEqual('kenneth@gmail.com');
     });
 
-    it('fetch all email subscribers', async () => {
-        const response = await Request(TestApp.koaInstance.callback()).get('/api/subscriber').set('token', token);
+    it('fetch all user account', async () => {
+        const response = await Request(TestApp.koaInstance.callback()).get('/api/user').set('token', token);
         expect(response.status).toEqual(ResponseCode.OK);
         expect(response.body).toBeInstanceOf(Array);
+        expect(response.body.length).toBeGreaterThan(1);
     });
 
-    it('delete subscriber', async () => {
-        const response = await Request(TestApp.koaInstance.callback()).delete(`/api/subscriber/${savedEmail[0].id}`).set('token', token);
+    it('delete user account', async () => {
+        const response = await Request(TestApp.koaInstance.callback()).delete(`/api/user/${users[1].id}`).set('token', token);
         expect(response.status).toEqual(ResponseCode.ACCEPTED);
         expect(response.body).toBeDefined();
-        const deletedSubscriber = await SubscriberEntity.findOne({ where: { id: response.body.id } });
-        expect(deletedSubscriber).toBeNull();
+        const deletedUser = await SubscriberEntity.findOne({ where: { id: response.body.id } });
+        expect(deletedUser).toBeNull();
     });
 });
