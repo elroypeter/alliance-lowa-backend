@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, BaseEntity, OneToMany, JoinColumn, OneT
 import { IProject } from '../interface/project.interface';
 import { Translatable } from '../locale/locale-types';
 import { ProjectAttachmentEntity } from './ProjectAttachment.entity';
-import { ProjectTranslationEntity } from './ProjectTranslationEntity';
+import { ProjectTranslationEntity } from './ProjectTranslationEntity.entity';
 import { PublishStatusEntity } from './Publish.entity';
 
 @Entity()

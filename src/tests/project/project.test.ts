@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { TestApp } from '../setup';
 import { ResponseCode } from '../../enums/response.enums';
 import { UserEntity } from '../../entity/User.entity';
-import { ProjectTranslationEntity } from '../../entity/ProjectTranslationEntity';
+import { ProjectTranslationEntity } from '../../entity/ProjectTranslationEntity.entity';
 import { ProjectEntity } from '../../entity/Project.entity';
 import { DeleteFile } from '../../services/ManageFile.service';
 

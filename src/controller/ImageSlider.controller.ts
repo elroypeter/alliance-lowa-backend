@@ -7,7 +7,7 @@ import { ImageSliderRepository } from '../repository/ImageSlider.repository';
 import { RouteAction } from '../types/route.types';
 import { IImageSlider, IImageSliderDto } from '../interface/image-slider.interface';
 import { ImageSliderEntity } from '../entity/ImageSlider.entity';
-import { ImageSliderTranslationEntity } from '../entity/ImageSliderTranslation.Entity';
+import { ImageSliderTranslationEntity } from '../entity/ImageSliderTranslation.entity';
 
 class ImageSliderController {
     imageSliderService: ImageSliderService;

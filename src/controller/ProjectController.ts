@@ -7,7 +7,7 @@ import { App } from '../bootstrap';
 import { ProjectRepository } from '../repository/Project.repository';
 import { ProjectService } from '../services/Project.service';
 import { ProjectEntity } from '../entity/Project.entity';
-import { ProjectTranslationEntity } from '../entity/ProjectTranslationEntity';
+import { ProjectTranslationEntity } from '../entity/ProjectTranslationEntity.entity';
 import { ProjectAttachmentEntity } from '../entity/ProjectAttachment.entity';
 class ProjectController {
     projectService: ProjectService;
