@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Translatable } from '../locale/locale-types';
 import { IImageSlider } from '../interface/image-slider.interface';
-import { ImageSliderTranslationEntity } from './ImageSliderTranslation.Entity';
+import { ImageSliderTranslationEntity } from './ImageSliderTranslation.entity';
 import { PublishStatusEntity } from './Publish.entity';
 
 @Entity('image-slider')

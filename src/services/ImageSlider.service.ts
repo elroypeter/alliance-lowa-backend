@@ -1,7 +1,7 @@
 import { Context } from 'koa';
 import { ResponseCode } from '../enums/response.enums';
 import { ImageSliderEntity } from '../entity/ImageSlider.entity';
-import { ImageSliderTranslationEntity } from '../entity/ImageSliderTranslation.Entity';
+import { ImageSliderTranslationEntity } from '../entity/ImageSliderTranslation.entity';
 import { IImageSlider, IImageSliderDto } from '../interface/image-slider.interface';
 import { PublishStatusEntity } from '../entity/Publish.entity';
 import { ImageSliderRepository } from '../repository/ImageSlider.repository';
