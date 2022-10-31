@@ -6,7 +6,7 @@ import { ContactMessageEntity } from './ContactMessage.entity';
 import { BlogNewsEntity } from './BlogNews.entity';
 import { BlogNewsTranslationEntity } from './BlogNewsTranslation.entity';
 import { CareerEntity } from './Career.entity';
-import { ImageSliderTranslationEntity } from './ImageSliderTranslation.Entity';
+import { ImageSliderTranslationEntity } from './ImageSliderTranslation.entity';
 import { ProjectAttachmentEntity } from './ProjectAttachment.entity';
 import { ProjectTranslationEntity } from './ProjectTranslationEntity.entity';
 import { PublishStatusEntity } from './Publish.entity';
