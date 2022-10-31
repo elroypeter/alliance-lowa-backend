@@ -8,7 +8,7 @@ import { BlogNewsTranslationEntity } from './BlogNewsTranslation.entity';
 import { CareerEntity } from './Career.entity';
 import { ImageSliderTranslationEntity } from './ImageSliderTranslation.Entity';
 import { ProjectAttachmentEntity } from './ProjectAttachment.entity';
-import { ProjectTranslationEntity } from './ProjectTranslationEntity';
+import { ProjectTranslationEntity } from './ProjectTranslationEntity.entity';
 import { PublishStatusEntity } from './Publish.entity';
 
 export const RegisteredEntities = [
