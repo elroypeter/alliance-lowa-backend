@@ -1,5 +1,5 @@
 import { ProjectEntity } from '../entity/Project.entity';
-import { ProjectTranslationEntity } from '../entity/ProjectTranslationEntity';
+import { ProjectTranslationEntity } from '../entity/ProjectTranslationEntity.entity';
 import { PublishStatusEntity } from '../entity/Publish.entity';
 import { IProject, IProjectAttachmentDto, IProjectDto } from '../interface/project.interface';
 import { ProjectRepository } from '../repository/Project.repository';
