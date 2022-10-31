@@ -1,58 +1,50 @@
-import { Context, Next } from "koa";
-import { User } from "../entity/User";
-import * as Bcrypt from "bcrypt";
-import { sign } from "jsonwebtoken";
-import { config } from "../config";
+import { Context } from 'koa';
+import { App } from '../bootstrap';
+import { RouteAction } from '../types/route.types';
+import { ResponseCode } from '../enums/response.enums';
+import { UserRepository } from '../repository/User.repository';
+import { AuthService } from '../services/Auth.service';
+import { ResponseService } from '../services/Response.service';
+import { UserService } from '../services/User.service';
+import { NotificationService } from '../services/Notification.service';
 
 class AuthController {
-    constructor() {}
+    authService: AuthService;
 
-    async login(ctx: Context, next: Next) {
-        try {
-            const { email, password } = ctx.request.body;
-
-            if (!(email && password)) {
-                ctx.status = 400;
-                ctx.body = { message: "all input is required" };
-                return;
-            }
-
-            const user: User = await User.findOneBy({ email });
-            const isMatch = await Bcrypt.compare(password, user.password);
-
-            if (user && isMatch) {
-                // create token
-                const token = sign(
-                    {
-                        userId: user.id,
-                        email: email,
-                        date: new Date().getTime(),
-                    },
-                    config.jwt_secret,
-                    { expiresIn: config.token_ttl }
-                );
-
-                ctx.state = 200;
-                ctx.body = {
-                    token,
-                    email,
-                    id: user.id,
-                    name: user.name,
-                };
-                return;
-            }
-
-            ctx.status = 400;
-            ctx.message = "Invalid Credentails";
-            return;
-        } catch (error) {
-            ctx.status = 400;
-            ctx.message = error;
-            return;
-        }
+    constructor(authService: AuthService) {
+        this.authService = authService;
     }
 
-    async changePassword(ctx: Context, next: Next) {}
+    login = async (ctx: Context): Promise<RouteAction> => {
+        const { email, password }: any = ctx.request.body;
+        const token = await this.authService.createToken(email, password, ctx);
+        ResponseService.res(ctx, ResponseCode.OK, { ...token });
+        return;
+    };
+
+    resetPassword = async (ctx: Context): Promise<RouteAction> => {
+        const { email }: any = ctx.request.body;
+        if (!(await this.authService.sendResetLink(ctx, email))) return;
+        ResponseService.res(ctx, ResponseCode.OK, 'Reset link has been sent');
+        return;
+    };
+
+    verifyResetPasswordCode = async (ctx: Context): Promise<RouteAction> => {
+        const { code, email }: any = ctx.request.body;
+        const verify = await this.authService.verifyResetCode(ctx, { code, email });
+        if (!verify) return;
+        ResponseService.res(ctx, ResponseCode.OK, 'Reset code is valid');
+        return;
+    };
+
+    changePassword = async (ctx: Context): Promise<RouteAction> => {
+        const { email, code, newPassword }: any = ctx.request.body;
+        const changed = await this.authService.updatePassword(ctx, { email, code, newPassword });
+        if (!changed) return;
+        ResponseService.res(ctx, ResponseCode.OK, 'Password has been updated');
+        return;
+    };
 }
 
-export const AuthControllerObj = new AuthController();
+export const getAuthController = (app?: App) =>
+    new AuthController(new AuthService(new UserService(new UserRepository(app.dataSource)), new NotificationService()));

@@ -1,6 +1,7 @@
 {
     "include": [
-        "./src/**/*"
+        "./src/**/*",
+        ".eslintrc.json"
     ],
     "exclude": [
         "node_modules",
@@ -9,6 +10,7 @@
     ],
     "compilerOptions": {
         "outDir": "./dist",
+        "baseUrl": "./",
         "lib": [
             "es5",
             "es6"

@@ -1,57 +1,70 @@
-import { ImageSliderControllerObj as ImageSliderController } from "../controller/ImageSlider.controller";
-import { authGuard } from "../middleware/auth.middleware";
+import { getImageSliderController } from '../controller/ImageSlider.controller';
+import { authGuard } from '../middleware/auth.middleware';
+import { App } from '../bootstrap';
+import { Route } from '../types/route.types';
 
-/**
- * routes format
- *     {
- *       "@name": "route name",
- *       "@path": "/path_url",
- *       "@httpMethod": "get|post|put|patch|delete",
- *       "@action": controller method,
- *       "@guards": [middlewares and generators],
- *    }
- */
-export const imageSlider = [
+export const imageSlider = (app: App): Route[] => [
     {
-        "@name": "getImageSlider",
-        "@path": "/image-slider",
-        "@httpMethod": "get",
-        "@action": ImageSliderController.getImageSlider,
-        "@guards": [authGuard],
+        name: 'getImageSlider',
+        path: '/api/image-slider',
+        httpMethod: 'get',
+        action: getImageSliderController(app).getAllImageSliders,
+        guards: [authGuard],
     },
     {
-        "@name": "saveImageSlider",
-        "@path": "/image-slider",
-        "@httpMethod": "post",
-        "@action": ImageSliderController.saveImageSlider,
-        "@guards": [authGuard],
+        name: 'getSingleImageSlider',
+        path: '/api/image-slider/:id',
+        httpMethod: 'get',
+        action: getImageSliderController(app).getSingleImageSlider,
+        guards: [authGuard],
     },
     {
-        "@name": "updateImageSlider",
-        "@path": "/image-slider/:id",
-        "@httpMethod": "put",
-        "@action": ImageSliderController.updateImageSlider,
-        "@guards": [authGuard],
+        name: 'getPublicImageSlider',
+        path: '/api/public/image-slider',
+        httpMethod: 'get',
+        action: getImageSliderController(app).getImageSlider,
+        guards: [],
     },
     {
-        "@name": "publishImageSlider",
-        "@path": "/image-slider/publish/:id",
-        "@httpMethod": "put",
-        "@action": ImageSliderController.publishImageSlider,
-        "@guards": [authGuard],
+        name: 'saveImageSlider',
+        path: '/api/image-slider',
+        httpMethod: 'post',
+        action: getImageSliderController(app).saveImageSlider,
+        guards: [authGuard],
     },
     {
-        "@name": "deleteImageSlider",
-        "@path": "/image-slider/:id",
-        "@httpMethod": "delete",
-        "@action": ImageSliderController.deleteImageSlider,
-        "@guards": [authGuard],
+        name: 'addImageTranslation',
+        path: '/api/image-slider/translation/:id',
+        httpMethod: 'post',
+        action: getImageSliderController(app).addImageTranslation,
+        guards: [authGuard],
     },
     {
-        "@name": "getWebImageSlider",
-        "@path": "/website/image-slider",
-        "@httpMethod": "get",
-        "@action": ImageSliderController.getPublishedImageSlider,
-        "@guards": [],
+        name: 'updateImageTranslation',
+        path: '/api/image-slider/translation/:id',
+        httpMethod: 'put',
+        action: getImageSliderController(app).updateImageTranslation,
+        guards: [authGuard],
+    },
+    {
+        name: 'deleteImageSlider',
+        path: '/api/image-slider/:id',
+        httpMethod: 'delete',
+        action: getImageSliderController(app).deleteImageSlider,
+        guards: [authGuard],
+    },
+    {
+        name: 'deleteTranslation',
+        path: '/api/translation/image-slider/:id',
+        httpMethod: 'delete',
+        action: getImageSliderController(app).deleteTranslation,
+        guards: [authGuard],
+    },
+    {
+        name: 'publishImageSlider',
+        path: '/api/image-slider/publish/:id',
+        httpMethod: 'put',
+        action: getImageSliderController(app).changePublishStatus,
+        guards: [authGuard],
     },
 ];

@@ -1,0 +1,26 @@
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { IContactMessage } from '../interface/contact-message.interface';
+
+@Entity('contact-message')
+export class ContactMessageEntity extends BaseEntity implements IContactMessage {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ length: 255 })
+    name: string;
+
+    @Column({ length: 255 })
+    email: string;
+
+    @Column({ length: 255 })
+    mobile: string;
+
+    @Column({ type: 'text' })
+    message: string;
+
+    @CreateDateColumn()
+    createdAt: string;
+
+    @UpdateDateColumn()
+    updatedAt: string;
+}

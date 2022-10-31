@@ -1,104 +1,109 @@
-import { Context, Next } from "koa";
-import slugfiy from "slugify";
-import { Project } from "../entity/Project";
-import { ProjectImage } from "../entity/ProjectImage";
-import { CreateFile, DeleteFile } from "../services/ManageFile";
-
+import { Context } from 'koa';
+import { ResponseCode } from '../enums/response.enums';
+import { IProject, IProjectAttachmentDto, IProjectDto } from '../interface/project.interface';
+import { ResponseService } from '../services/Response.service';
+import { RouteAction } from '../types/route.types';
+import { App } from '../bootstrap';
+import { ProjectRepository } from '../repository/Project.repository';
+import { ProjectService } from '../services/Project.service';
+import { ProjectEntity } from '../entity/Project.entity';
+import { ProjectTranslationEntity } from '../entity/ProjectTranslationEntity';
+import { ProjectAttachmentEntity } from '../entity/ProjectAttachment.entity';
 class ProjectController {
-    constructor() {}
-
-    async getProjects(ctx: Context, next: Next) {
-        const project: Project[] = await Project.find();
-        ctx.status = 200;
-        ctx.body = project;
+    projectService: ProjectService;
+    constructor(projectService: ProjectService) {
+        this.projectService = projectService;
     }
 
-    async getProjectDetails(ctx: Context, next: Next) {
-        const projects: Project[] = await Project.find({
-            where: { id: ctx.params.id },
-            relations: ["images"],
-        });
-        ctx.status = 200;
-        ctx.body = projects[0];
-    }
+    getProject = async (ctx: Context): Promise<RouteAction> => {
+        const { langCode, isPublished } = ctx.request.query as { [x: string]: string & undefined };
+        const projects: IProject[] = await this.projectService.getProjects(langCode, isPublished === 'true' ? true : false);
+        ResponseService.res(ctx, ResponseCode.OK, projects);
+        return;
+    };
 
-    async saveProject(ctx: Context, next: Next) {
-        const project: Project = new Project();
-        const { title, description } = ctx.request.body;
+    getAllProject = async (ctx: Context): Promise<RouteAction> => {
+        const projects: ProjectEntity[] = await this.projectService.getAllProjects();
+        ResponseService.res(ctx, ResponseCode.OK, projects);
+        return;
+    };
 
-        project.title = title;
-        project.slug = slugfiy(title, { lower: true });
-        project.description = description;
+    getOneProject = async (ctx: Context): Promise<RouteAction> => {
+        const id = parseInt(ctx.params.id);
+        const project = await this.projectService.getSingleProjects(ctx, id);
+        if (!project) return;
+        ResponseService.res(ctx, ResponseCode.OK, project);
+        return;
+    };
 
-        await project.save();
-        ctx.body = { message: "saved successfully" };
-        ctx.status = 200;
-    }
+    getSingleProject = async (ctx: Context): Promise<RouteAction> => {
+        const id = parseInt(ctx.params.id);
+        const { langCode } = ctx.request.query as { [x: string]: string & undefined };
+        const project = await this.projectService.findOneProject(ctx, id, langCode);
+        if (!project) return;
+        ResponseService.res(ctx, ResponseCode.OK, project);
+        return;
+    };
 
-    async addImage(ctx: Context, next: Next) {
-        const projects: Project[] = await Project.find({
-            where: { id: ctx.params.id },
-            relations: ["images"],
-        });
+    saveProject = async (ctx: Context): Promise<RouteAction> => {
+        const projectDto: IProjectDto = ctx.request.body;
+        const projects: ProjectEntity[] = await this.projectService.saveProject(projectDto);
+        ResponseService.res(ctx, ResponseCode.CREATED, projects);
+        return;
+    };
 
-        const { image } = ctx.request.body;
-        const projectImage: ProjectImage = new ProjectImage();
-        const fileData = await CreateFile(image);
-        projectImage.imageData = fileData.image;
-        projectImage.filePath = fileData.filePath;
-        await projectImage.save();
+    addProjectTranslation = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const projectDto: IProjectDto = ctx.request.body;
+        const projects: ProjectEntity = await this.projectService.addProjectTranslation(ctx, projectDto, id);
+        ResponseService.res(ctx, ResponseCode.CREATED, projects);
+        return;
+    };
 
-        projects[0].images.push(projectImage);
-        await projects[0].save();
-        ctx.body = { message: "saved successfully" };
-        ctx.status = 200;
-    }
+    deleteProjectTranslation = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const projects: ProjectTranslationEntity = await this.projectService.deleteProjectTranslation(ctx, id);
+        ResponseService.res(ctx, ResponseCode.CREATED, projects);
+        return;
+    };
 
-    async removeImage(ctx: Context, next: Next) {
-        const projectImage: ProjectImage = await ProjectImage.findOneBy({
-            id: ctx.params.id,
-        });
-        await DeleteFile(projectImage.filePath);
-        await projectImage.remove();
-        ctx.body = { message: "removed successfully" };
-        ctx.status = 200;
-    }
+    addProjectAttachment = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const projectAttachmentDto: IProjectAttachmentDto = ctx.request.body;
+        const projects: ProjectEntity = await this.projectService.addProjectAttachment(ctx, projectAttachmentDto, id);
+        ResponseService.res(ctx, ResponseCode.CREATED, projects);
+        return;
+    };
 
-    async updateProject(ctx: Context, next: Next) {
-        const project: Project = await Project.findOneBy({
-            id: ctx.params.id,
-        });
+    updateProjectTranslation = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const projectDto: IProjectDto = ctx.request.body;
+        const projectTranslation: ProjectTranslationEntity = await this.projectService.updateProjectTranslation(ctx, projectDto, id);
+        ResponseService.res(ctx, ResponseCode.CREATED, projectTranslation);
+        return;
+    };
 
-        const { title, description } = ctx.request.body;
+    changePublishStatus = async (ctx: Context): Promise<RouteAction> => {
+        const { status } = ctx.request.body;
+        const id: number = parseInt(ctx.params.id);
+        const project: ProjectEntity = await this.projectService.changePublishStatus(ctx, status, id);
+        ResponseService.res(ctx, ResponseCode.ACCEPTED, project);
+        return;
+    };
 
-        project.title = title;
-        project.slug = slugfiy(title, { lower: true });
-        project.description = description;
+    deleteProject = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const project: ProjectEntity = await this.projectService.deleteProject(ctx, id);
+        ResponseService.res(ctx, ResponseCode.ACCEPTED, project);
+        return;
+    };
 
-        await project.save();
-        ctx.body = { message: "updated successfully" };
-        ctx.status = 200;
-    }
-
-    async publishProject(ctx: Context, next: Next) {
-        const project: Project = await Project.findOneBy({
-            id: ctx.params.id,
-        });
-
-        project.isPublished = ctx.request.body.status;
-        await project.save();
-        ctx.body = { message: "published successfully" };
-        ctx.status = 200;
-    }
-
-    async deleteProject(ctx: Context, next: Next) {
-        const project: Project = await Project.findOneBy({
-            id: ctx.params.id,
-        });
-        await project.remove();
-        ctx.body = { message: "removed successfully" };
-        ctx.status = 200;
-    }
+    deleteProjectAttachment = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const projectAttachmentEntity: ProjectAttachmentEntity = await this.projectService.deleteProjectAttachment(ctx, id);
+        ResponseService.res(ctx, ResponseCode.ACCEPTED, projectAttachmentEntity);
+        return;
+    };
 }
 
-export const ProjectControllerObj = new ProjectController();
+export const getProjectController = (app: App) => new ProjectController(new ProjectService(new ProjectRepository(app.dataSource)));

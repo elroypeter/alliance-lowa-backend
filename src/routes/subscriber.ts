@@ -1,36 +1,30 @@
-import { SubscriberControllerObj as SubscriberController } from "../controller/Subscriber.controller";
-import { authGuard } from "../middleware/auth.middleware";
+import { authGuard } from '../middleware/auth.middleware';
+import { Route } from '../types/route.types';
+import { App } from '../bootstrap';
+import { getSubscriberController } from '../controller/Subscriber.controller';
+import { validator } from '../middleware/validate.middleware';
+import { SubscriberSchema } from '../interface/subscriber.interface';
 
-/**
- * routes format
- *     {
- *       "@name": "route name",
- *       "@path": "/path_url",
- *       "@httpMethod": "get|post|put|patch|delete",
- *       "@action": controller method,
- *       "@guards": [middleware, generators],
- *    }
- */
-export const subscriber = [
+export const subscriber = (app: App): Route[] => [
     {
-        "@name": "getSubscribers",
-        "@path": "/subscriber",
-        "@httpMethod": "get",
-        "@action": SubscriberController.getSubscribers,
-        "@guards": [authGuard],
+        name: 'getSubscriber',
+        path: '/api/subscriber',
+        httpMethod: 'get',
+        action: getSubscriberController(app).getSubscriber,
+        guards: [authGuard],
     },
     {
-        "@name": "saveSubscriber",
-        "@path": "/subscriber",
-        "@httpMethod": "post",
-        "@action": SubscriberController.saveSubscriber,
-        "@guards": [],
+        name: 'saveSubscriber',
+        path: '/api/subscriber',
+        httpMethod: 'post',
+        action: getSubscriberController(app).saveSubscriber,
+        guards: [validator(SubscriberSchema, ['body'])],
     },
     {
-        "@name": "deleteSubscriber",
-        "@path": "/subscriber/:id",
-        "@httpMethod": "delete",
-        "@action": SubscriberController.deleteSubscriber,
-        "@guards": [authGuard],
+        name: 'deleteSubscriber',
+        path: '/api/subscriber/:id',
+        httpMethod: 'delete',
+        action: getSubscriberController(app).deleteSubscriber,
+        guards: [authGuard],
     },
 ];
