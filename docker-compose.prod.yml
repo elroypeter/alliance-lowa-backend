@@ -1,41 +1,41 @@
 version: '3'
 
 services:
-  # mysql development container
-  mysqldb: 
-    image: mysql:5.7
-    restart: always
-    # use ports when exposing port to external or local machine
-    # docker containers can communicate with each other using network ips
-    # ports:
-    #   - "3007:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=${DBPASSWORD}
-      - MYSQL_DATABASE=${DBDATABASE}
-      - MYSQL_USER=${DBUSER}
-      - MYSQL_PASSWORD=${DBPASSWORD}
-    volumes:
-      # volume attaches to local file system
-      - ${DBVOLUME}:/var/lib/mysql
-      # named volume eg
-      # mysql-db:/var/lib/mysql where mysql-db is name of volume
+    # mysql development container
+    mysqldb:
+        image: mysql:5.7
+        restart: always
+        # use ports when exposing port to external or local machine
+        # docker containers can communicate with each other using network ips
+        # ports:
+        #   - "3007:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=${DBPASSWORD}
+            - MYSQL_DATABASE=${DBDATABASE}
+            - MYSQL_USER=${DBUSER}
+            - MYSQL_PASSWORD=${DBPASSWORD}
+        volumes:
+            # volume attaches to local file system
+            - ${DBVOLUME}:/var/lib/mysql
+            # named volume eg
+            # mysql-db:/var/lib/mysql where mysql-db is name of volume
 
-  # node app container prod config
-  alliance-lowa-app:
-    build: . 
-    ports:
-      # node port mapping
-      - "${PORT}:4435"
-    environment:
-      # env default port
-      - PORT=4435
-      - NODE_ENV=production
-      - DBPORT=${DBPORT}
-      - DBHOST=${DBHOST}
-      - DBUSER=${DBUSER}
-      - DBDATABASE=${DBDATABASE}
-      - DBPASSWORD=${DBPASSWORD}
-      - JWTSECRET=${JWTSECRET}
-    volumes:
-      - ${IMAGEDIR}:/app/public
-    command: pnpm serve:prod
+    # node app container prod config
+    alliance-lowa-app:
+        build: .
+        ports:
+            # node port mapping
+            - '${PORT}:4435'
+        environment:
+            # env default port
+            - PORT=4435
+            - NODE_ENV=production
+            - DBPORT=${DBPORT}
+            - DBHOST=${DBHOST}
+            - DBUSER=${DBUSER}
+            - DBDATABASE=${DBDATABASE}
+            - DBPASSWORD=${DBPASSWORD}
+            - JWTSECRET=${JWTSECRET}
+        volumes:
+            - ${IMAGEDIR}:/app/public
+        command: pnpm serve:prod
