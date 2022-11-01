@@ -5,7 +5,7 @@ import { ResponseCode } from '../../enums/response.enums';
 import { UserEntity } from '../../entity/User.entity';
 import { DeleteFile } from '../../services/ManageFile.service';
 import { ImageSliderEntity } from '../../entity/ImageSlider.entity';
-import { ImageSliderTranslationEntity } from '../../entity/ImageSliderTranslation.Entity';
+import { ImageSliderTranslationEntity } from '../../entity/ImageSliderTranslation.entity';
 
 describe('ImageSider test', () => {
     let token;
