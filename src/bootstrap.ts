@@ -28,8 +28,7 @@ export class App {
 
     async initApp(appConfig?: AppConfig): Promise<App> {
         // sync data in test|dev mode
-        // if (this.config.app_env !== 'production') await this.dataSource.synchronize(true);
-        // await this.dataSource.synchronize(true);
+        if (this.config.app_env !== 'production') await this.dataSource.synchronize(true);
 
         // instantiate Koa
         this.koaInstance = new Koa();
