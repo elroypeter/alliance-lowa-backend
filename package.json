@@ -17,7 +17,7 @@
         "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
         "seed:create": "typeorm migration:create src/db/seeds/seed",
         "seed:run:dev": "npm run typeorm -- migration:run -d src/db/seed-source.ts",
-        "seed:run:prod": "npm run typeorm -- migration:run -d dist/src/db/seed-source.js",
+        "seed:run:prod": "npm run typeorm -- migration:run -d dist/db/seed-source.js",
         "dev:migration:generate": "npm run typeorm -- migration:generate src/db/migrations/migration -d src/db/data-source.ts",
         "dev:migration:run": "npm run typeorm -- migration:run -d src/db/data-source.ts",
         "d:m:g": "npm run dev:migration:generate",
