@@ -38,4 +38,4 @@ services:
             - JWTSECRET=${JWTSECRET}
         volumes:
             - ${IMAGEDIR}:/app/public
-        command: pnpm serve:prod
+        command: yarn serve:prod

@@ -1,8 +1,7 @@
 node_modules
-pnpm-lock.yaml
+yarn-lock.yaml
 dist
 env.yml
 .env
-docker-compose.dev.yml
-db
+src/db/migrations/*
 public/*

@@ -3,7 +3,7 @@ Dockerfile
 .dockerignore
 .git
 .gitignore
-pnpm-lock.yaml
+yarn-lock.yaml
 docker-compose*
 db
 public

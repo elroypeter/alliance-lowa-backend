@@ -13,11 +13,25 @@
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "test:e2e": "jest --config ./test/jest-e2e.json"
+        "test:e2e": "jest --config ./test/jest-e2e.json",
+        "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+        "seed:create": "typeorm migration:create src/db/seeds/seed",
+        "seed:run:dev": "npm run typeorm -- migration:run -d src/db/seed-source.ts",
+        "seed:run:prod": "npm run typeorm -- migration:run -d dist/src/db/seed-source.js",
+        "dev:migration:generate": "npm run typeorm -- migration:generate src/db/migrations/migration -d src/db/data-source.ts",
+        "dev:migration:run": "npm run typeorm -- migration:run -d src/db/data-source.ts",
+        "d:m:g": "npm run dev:migration:generate",
+        "d:m:r": "npm run dev:migration:run",
+        "prod:migration:run": "typeorm migration:run -d ./dist/typeorm.config.js",
+        "prod:migration:show": "typeorm migration:show -d ./dist/typeorm.config.js",
+        "prod:migration:revert": "typeorm migration:revert -d ./dist/typeorm.config.js ",
+        "prod:migration:generate": "typeorm migration:generate ./migrations/migration -d ./dist/typeorm.config.js --outputJs",
+        "p:m:g": "npm run prod:migration:generate",
+        "p:m:r": "npm run prod:migration:run"
     },
     "lint-staged": {
         "*.ts": [
-            "pnpm lint",
+            "yarn lint",
             "git update-index --again"
         ]
     },
@@ -78,9 +92,6 @@
         "slugify": "^1.6.5",
         "typeorm": "^0.3.7",
         "uuid": "^9.0.0"
-    },
-    "engines": {
-        "node": "14.x"
     },
     "jest": {
         "moduleFileExtensions": [
