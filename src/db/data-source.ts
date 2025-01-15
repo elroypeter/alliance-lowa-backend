@@ -1,7 +1,7 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 import { configService } from '../config';
-import { RegisteredEntities } from 'src/entity';
+import { RegisteredEntities } from '../entity';
 
 const config = configService(RegisteredEntities);
 

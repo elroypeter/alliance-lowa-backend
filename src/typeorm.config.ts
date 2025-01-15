@@ -1,5 +1,5 @@
 import { configService } from './config';
-import { RegisteredEntities } from 'src/entity';
+import { RegisteredEntities } from './entity';
 
 import { DataSource } from 'typeorm';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
