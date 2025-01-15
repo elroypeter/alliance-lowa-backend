@@ -1,6 +1,6 @@
-FROM node:14.17.6
+FROM node:16.19.0
 
-RUN npm install -g pnpm
+RUN npm install -g yarn --force
 
 RUN npm install -g nodemon
 
@@ -8,10 +8,10 @@ WORKDIR /app
 
 COPY package.json .
 
-RUN pnpm install
+RUN yarn install
 
 RUN mkdir public 
 
 COPY . .
 EXPOSE ${PORT}
-CMD ["pnpm", "serve:prod"]
+CMD ["yarn", "serve:prod"]
