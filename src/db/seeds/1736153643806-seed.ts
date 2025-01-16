@@ -1,5 +1,5 @@
-import { UserEntity } from 'src/entity/User.entity';
-import { hashPassword } from 'src/utils/hash.utils';
+import { UserEntity } from '../../entity/User.entity';
+import { hashPassword } from '../../utils/hash.utils';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class Seed1736153643806 implements MigrationInterface {
