@@ -36,12 +36,23 @@ export class CareerService {
     }
 
     async deleteCareer(ctx: Context, id: number): Promise<CareerEntity> {
-        const career: CareerEntity = await CareerEntity.findOne({ where: { id } });
+        const career: CareerEntity = await CareerEntity.findOne({ where: { id }, relations: ['isPublished'] });
         if (!career) {
             ResponseService.throwReponseException(ctx, 'Career with id not found', ResponseCode.BAD_REQUEST);
             return career;
         }
+
+        // Save reference we need before deletion
+        const publishStatusId = career.isPublished?.id;
+
+        // Step 1: Delete the career entity (this removes the FK constraint to publish-status)
         await CareerEntity.delete(career.id);
+
+        // Step 2: Now we can safely delete publish status (career entity no longer references it)
+        if (publishStatusId) {
+            await PublishStatusEntity.delete(publishStatusId);
+        }
+
         return career;
     }
 

@@ -8,7 +8,7 @@ import { Context } from 'koa';
 import { ResponseCode } from '../enums/response.enums';
 import { ResponseService } from './Response.service';
 import { ProjectAttachmentEntity } from '../entity/ProjectAttachment.entity';
-import { CreateFile } from './ManageFile.service';
+import { CreateFile, DeleteFile } from './ManageFile.service';
 
 export class ProjectService {
     projectRepository: ProjectRepository;
@@ -125,12 +125,35 @@ export class ProjectService {
     }
 
     async deleteProject(ctx: Context, id: number): Promise<ProjectEntity> {
-        const projectEntity: ProjectEntity = await ProjectEntity.findOne({ where: { id } });
+        const projectEntity: ProjectEntity = await ProjectEntity.findOne({ where: { id }, relations: ['attachments', 'isPublished'] });
         if (!projectEntity) {
             ResponseService.throwReponseException(ctx, 'Project with id not found', ResponseCode.BAD_REQUEST);
             return projectEntity;
         }
+
+        // Save references we need before deletion
+        const publishStatusId = projectEntity.isPublished?.id;
+        const attachments = projectEntity.attachments || [];
+
+        // Step 1: Delete all attachment files first
+        for (const attachment of attachments) {
+            if (attachment.filePath) {
+                try {
+                    await DeleteFile(attachment.filePath);
+                } catch (error) {
+                    // File might not exist, continue anyway
+                }
+            }
+        }
+
+        // Step 2: Delete the project entity (this removes FK constraints and CASCADE deletes translations and attachments)
         await ProjectEntity.delete(projectEntity.id);
+
+        // Step 3: Now we can safely delete publish status (project entity no longer references it)
+        if (publishStatusId) {
+            await PublishStatusEntity.delete(publishStatusId);
+        }
+
         return projectEntity;
     }
 

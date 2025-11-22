@@ -81,6 +81,14 @@ class BlogController {
         ResponseService.res(ctx, ResponseCode.ACCEPTED, blog);
         return;
     };
+
+    updateBlogCover = async (ctx: Context): Promise<RouteAction> => {
+        const id: number = parseInt(ctx.params.id);
+        const { base64 } = ctx.request.body as { base64: string };
+        const blog: BlogNewsEntity = await this.blogService.updateBlogCover(ctx, id, base64);
+        ResponseService.res(ctx, ResponseCode.ACCEPTED, blog);
+        return;
+    };
 }
 
 export const getBlogController = (app: App) => new BlogController(new BlogService(new BlogRepository(app.dataSource)));
