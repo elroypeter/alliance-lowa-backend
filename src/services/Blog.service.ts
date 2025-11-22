@@ -6,7 +6,7 @@ import { PublishStatusEntity } from '../entity/Publish.entity';
 import { ResponseCode } from '../enums/response.enums';
 import { IBlogNews, IBlogNewsDto } from '../interface/career-news.interface';
 import { BlogRepository } from '../repository/Blog.repository';
-import { CreateFile } from './ManageFile.service';
+import { CreateFile, DeleteFile } from './ManageFile.service';
 import { ResponseService } from './Response.service';
 
 export class BlogService {
@@ -108,12 +108,64 @@ export class BlogService {
     }
 
     async deleteBlog(ctx: Context, id: number): Promise<BlogNewsEntity> {
+        const blogNewsEntity: BlogNewsEntity = await BlogNewsEntity.findOne({ where: { id }, relations: ['translations', 'isPublished'] });
+        if (!blogNewsEntity) {
+            ResponseService.throwReponseException(ctx, 'Blog with id not found', ResponseCode.BAD_REQUEST);
+            return blogNewsEntity;
+        }
+
+        // Save references we need before deletion
+        const publishStatusId = blogNewsEntity.isPublished?.id;
+        const filePath = blogNewsEntity.filePath;
+
+        // Step 1: Delete all translations first (they reference the blog entity)
+        if (blogNewsEntity.translations && blogNewsEntity.translations.length > 0) {
+            for (const translation of blogNewsEntity.translations) {
+                await BlogNewsTranslationEntity.delete(translation.id);
+            }
+        }
+
+        // Step 2: Delete the blog entity (this removes the FK constraint to publish-status)
+        await BlogNewsEntity.delete(blogNewsEntity.id);
+
+        // Step 3: Now we can safely delete publish status (blog entity no longer references it)
+        if (publishStatusId) {
+            await PublishStatusEntity.delete(publishStatusId);
+        }
+
+        // Step 4: Delete the file from filesystem
+        if (filePath) {
+            try {
+                await DeleteFile(filePath);
+            } catch (error) {
+                // File might not exist, continue anyway
+            }
+        }
+
+        return blogNewsEntity;
+    }
+
+    async updateBlogCover(ctx: Context, id: number, base64: string): Promise<BlogNewsEntity> {
         const blogNewsEntity: BlogNewsEntity = await BlogNewsEntity.findOne({ where: { id } });
         if (!blogNewsEntity) {
             ResponseService.throwReponseException(ctx, 'Blog with id not found', ResponseCode.BAD_REQUEST);
             return blogNewsEntity;
         }
-        await BlogNewsEntity.delete(blogNewsEntity.id);
-        return blogNewsEntity;
+
+        // Delete old file if it exists
+        if (blogNewsEntity.filePath) {
+            try {
+                await DeleteFile(blogNewsEntity.filePath);
+            } catch (error) {
+                // File might not exist, continue anyway
+            }
+        }
+
+        // Create new file
+        const fileData = await CreateFile(base64);
+        blogNewsEntity.filePath = fileData.filePath;
+        await blogNewsEntity.save();
+
+        return await BlogNewsEntity.findOne({ where: { id }, relations: ['isPublished', 'translations'] });
     }
 }

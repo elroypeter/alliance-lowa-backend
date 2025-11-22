@@ -5,7 +5,7 @@ import { ImageSliderTranslationEntity } from '../entity/ImageSliderTranslation.e
 import { IImageSlider, IImageSliderDto } from '../interface/image-slider.interface';
 import { PublishStatusEntity } from '../entity/Publish.entity';
 import { ImageSliderRepository } from '../repository/ImageSlider.repository';
-import { CreateFile } from './ManageFile.service';
+import { CreateFile, DeleteFile } from './ManageFile.service';
 import { ResponseService } from './Response.service';
 
 export class ImageSliderService {
@@ -98,12 +98,33 @@ export class ImageSliderService {
     }
 
     async deleteImageSlider(ctx: Context, id: number): Promise<ImageSliderEntity> {
-        const imageSliderEntity: ImageSliderEntity = await ImageSliderEntity.findOne({ where: { id } });
+        const imageSliderEntity: ImageSliderEntity = await ImageSliderEntity.findOne({ where: { id }, relations: ['isPublished'] });
         if (!imageSliderEntity) {
             ResponseService.throwReponseException(ctx, 'Imageslider with id not found', ResponseCode.BAD_REQUEST);
             return imageSliderEntity;
         }
+
+        // Save references we need before deletion
+        const publishStatusId = imageSliderEntity.isPublished?.id;
+        const filePath = imageSliderEntity.filePath;
+
+        // Step 1: Delete the image slider entity (this removes FK constraint and CASCADE deletes translations)
         await ImageSliderEntity.delete(imageSliderEntity.id);
+
+        // Step 2: Now we can safely delete publish status (image slider entity no longer references it)
+        if (publishStatusId) {
+            await PublishStatusEntity.delete(publishStatusId);
+        }
+
+        // Step 3: Delete the file from filesystem
+        if (filePath) {
+            try {
+                await DeleteFile(filePath);
+            } catch (error) {
+                // File might not exist, continue anyway
+            }
+        }
+
         return imageSliderEntity;
     }
 

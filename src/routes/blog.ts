@@ -74,4 +74,11 @@ export const blog = (app: App): Route[] => [
         action: getBlogController(app).deleteBlog,
         guards: [authGuard],
     },
+    {
+        name: 'updateBlogCover',
+        path: '/api/blog-news/cover/:id',
+        httpMethod: 'put',
+        action: getBlogController(app).updateBlogCover,
+        guards: [authGuard],
+    },
 ];

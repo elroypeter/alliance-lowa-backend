@@ -5,11 +5,6 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class Seed1736153643806 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         const users = [
-            // {
-            //     email: 'admin@allowa.org',
-            //     name: 'Admin Allowa',
-            //     password: 'test',
-            // },
             {
                 email: 'g.zihalirwa@allowa.org',
                 name: 'G Zihalirwa',
